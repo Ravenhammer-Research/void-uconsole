@@ -30,7 +30,7 @@ jobs:
       working-directory: linux
       run: |
         mkdir -p ../install/usr
-        make KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 bcm2711_defconfig
+        make KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-suse-linux- V=1 bcm2711_defconfig
         scripts/config -e CONFIG_BTRFS_FS
         scripts/config -e CONFIG_BTRFS_FS_POSIX_ACL
         scripts/config -e CONFIG_EXFAT_FS
