@@ -30,7 +30,7 @@ jobs:
       working-directory: linux
       run: |
         mkdir -p ../install/usr
-        make OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 bcm2711_defconfig
+        make AR=OBJCOPY=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 bcm2711_defconfig
         scripts/config -e CONFIG_BTRFS_FS
         scripts/config -e CONFIG_BTRFS_FS_POSIX_ACL
         scripts/config -e CONFIG_EXFAT_FS
@@ -43,10 +43,10 @@ jobs:
         scripts/config -e CONFIG_SECURITY_YAMA
         scripts/config -e CONFIG_USERFAULTFD
         scripts/config -e CONFIG_NFT_COMPAT
-        make OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2
-        make OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2 dtbs
-        make OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 tarxz-pkg
-        make OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp INSTALL_HDR_PATH=../install/usr kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 headers_install
+        make AR=OBJCOPY=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2
+        make AR=OBJCOPY=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2 dtbs
+        make AR=OBJCOPY=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 tarxz-pkg
+        make AR=OBJCOPY=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp INSTALL_HDR_PATH=../install/usr kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 headers_install
         cd ../install ; tar -cvf ../linux-headers-6.6.51-v8-arm64.tar usr/ ; cd .. ; xz -9 linux-headers-6.6.51-v8-arm64.tar  
     - name: Create installer.bin
       run: truncate -s 4096M installer.bin
