@@ -79,7 +79,7 @@ jobs:
     - name: Docker builder
       run: docker create --name void-builder voidlinux/voidlinux:latest /bin/bash
     - name: Add QEMU BINFMT shim
-      run: docker cp /usr/bin/qemu-aarch64-static void-builder:/usr/bin/qemu-aarch64-static
+      run: docker cp /usr/bin/qemu-aarch64 void-builder:/usr/bin/qemu-aarch64
     - name: Commit builder
       run: docker commit void-builder voidlinux/voidlinux:latest
     - name: Docker build
@@ -91,7 +91,7 @@ jobs:
     - name: Free space
       run: docker rm rpi-image ; docker rmi voidlinux/voidlinux:latest
     - name: Delete QEMU BINFMT shim
-      run: sudo rm -rf /mnt/usr/bin/qemu-aarch64-static
+      run: sudo rm -rf /mnt/usr/bin/qemu-aarch64
     - name: Home directory
       run: sudo mkdir -p /mnt/home/pi/.ssh
     - name: authorized_keys empty file
@@ -140,12 +140,12 @@ jobs:
         asset_path: linux/linux-6.6.51-v8-arm64.tar.xz
         asset_name: linux-6.6.51-v8-arm64.tar.xz
         asset_content_type: application/x-tar+xz
-    - name: Upload kernel headers tarball
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: linux-headers-6.6.51-v8-arm64.tar.xz
-        asset_name: linux-headers-6.6.51-v8-arm64.tar.xz
-        asset_content_type: application/x-tar+xz
+    # - name: Upload kernel headers tarball
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ github.token }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: linux-headers-6.6.51-v8-arm64.tar.xz
+    #     asset_name: linux-headers-6.6.51-v8-arm64.tar.xz
+    #     asset_content_type: application/x-tar+xz
