@@ -16,9 +16,8 @@ jobs:
       id: date
       run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
     - name: Install tools
-      run: |
-        sudo apt update
-        sudo apt -y install flex bison rsync exfatprogs dosfstools btrfs-progs build-essential libssl-dev bc p7zip-full ccache gcc-aarch64-linux-gnu device-tree-compiler python-is-python3 python3-pip exfatprogs parted exfat-fuse binfmt-support qemu-user-static
+      run: |    
+        sudo zypper install -y zypper install flex bison rsync exfatprogs dosfstools btrfs-progs build-essential libopenssl-devel bc p7zip-full ccache cross-aarch64-gcc7 dtc python3 python3-pip exfatprogs parted fuse-exfat qemu-user-static
     - name: clone external repos
       run: |
         git clone https://github.com/raspberrypi/userland
