@@ -24,9 +24,13 @@ ADD packages.txt /tmp/packages.txt
 
 RUN xbps-install -S -u -y xbps
 
-RUN xbps-pkgdb -m hold linux
+# RUN xbps-pkgdb -m hold linux
 
-RUN xbps-pkgdb -m hold linux-headers
+# RUN xbps-pkgdb -m hold linux-headers
+
+RUN echo "ignorepkg=linux" > /etc/xbps.d/ignore.conf
+
+RUN echo "ignorepkg=linux-headers" >> /etc/xbps.d/ignore.conf
 
 RUN cat /tmp/packages.txt | xargs -i xbps-install -y -S -R "${REPO}" {} || true
 
