@@ -34,13 +34,13 @@ RUN echo "ignorepkg=linux-headers" >> /etc/xbps.d/ignore.conf
 
 RUN cat /tmp/packages.txt | xargs -i xbps-install -y -S -R "${REPO}" {} || true
 
-RUN xbps-install -Su -y
+RUN xbps-install -Su -y || true
 
-RUN xbps-remove -yO
+RUN xbps-remove -yO || true
 
-RUN xbps-remove -yo
+RUN xbps-remove -yo || true
 
-RUN vkpurge rm all
+RUN vkpurge rm all || true
 
 ADD sudoers /etc/sudoers.d
 
