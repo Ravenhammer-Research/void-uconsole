@@ -1,5 +1,9 @@
 FROM voidlinux/voidlinux:latest
 
+ENV HTTP_PROXY=http://192.88.99.0:3128
+
+ENV HTTPS_PROXY=http://192.88.99.0:3128
+
 ENV WANT_32BIT=1
 
 ENV WANT_64BIT=1
