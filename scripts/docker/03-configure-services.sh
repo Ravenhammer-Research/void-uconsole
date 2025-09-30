@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euox pipefail
 
 # Setup runit services
 ln -sfv /etc/sv/socklog-unix /etc/runit/runsvdir/default/

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euox pipefail
 
 # Create disk image
 truncate -s 4096M installer.bin

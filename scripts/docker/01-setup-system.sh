@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euox pipefail
 
 # Update package manager
 xbps-install -S -u -y xbps
