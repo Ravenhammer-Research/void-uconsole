@@ -21,7 +21,6 @@ make STRIP=aarch64-linux-gnu-strip \
 
 # Configure kernel options
 scripts/config -d CONFIG_HZ_100
-scripts/config -d CONFIG_HZ_100
 scripts/config -d CONFIG_HZ_250
 scripts/config -d CONFIG_HZ_300
 scripts/config -e CONFIG_HZ_1000
@@ -138,7 +137,7 @@ eval make ${TOOLCHAIN} tarxz-pkg
 # XXX Install headers
 # eval make ${TOOLCHAIN} INSTALL_HDR_PATH=../install/usr headers_install
 
-# # Package headers
+# XXX # Package headers
 # cd ../install
 # tar -cvf ../linux-headers-${KERNEL_VERSION}-v8-arm64.tar usr/
 # cd ..
