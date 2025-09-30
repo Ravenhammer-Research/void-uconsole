@@ -20,12 +20,18 @@ sudo mkfs.vfat -F32 "${LOOP_DEV}p1"
 sudo mkfs.exfat "${LOOP_DEV}p2"
 sudo mkfs.btrfs "${LOOP_DEV}p3"
 
+# Mount filesystems
+sudo mount -t btrfs -o compress=zstd:15 "${LOOP_DEV}p3" /mnt/
+
 # Create mount points
 sudo mkdir -p /mnt/boot
 
-# Mount filesystems
-sudo mount -t btrfs -o compress=zstd:15 "${LOOP_DEV}p3" /mnt/
+# Mount boot partition
 sudo mount "${LOOP_DEV}p1" /mnt/boot
+
+# Mount sideload partition 
+sudo mkdir -p /mnt/mnt/sideload
+sudo mount "${LOOP_DEV}p2" /mnt/mnt/sideload
 
 # Print the loop device for other scripts
 echo "${LOOP_DEV}"
