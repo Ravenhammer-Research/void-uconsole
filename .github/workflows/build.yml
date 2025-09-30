@@ -1,0 +1,151 @@
+name: "Void Linux for uConsole"
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    permissions:
+      contents: write
+      pull-requests: read
+    runs-on: self-hosted
+#    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: Get current date
+      id: date
+      run: echo "stamp=$(date '+%s')" >> $GITHUB_ENV
+#    - name: Install tools
+#      run: |    
+#        sudo zypper install -y zypper install flex bison rsync exfatprogs dosfstools btrfs-progs build-essential libopenssl-devel bc p7zip-full ccache cross-aarch64-gcc7 dtc python3 python3-pip exfatprogs parted fuse-exfat qemu-user-static ; true
+    - name: clone external repos
+      run: |
+        git clone https://github.com/raspberrypi/userland
+    - name: delete git directories
+      run: |
+        rm -rf userland/.git
+    - name: Setup CCache
+      uses: hendrikmuhs/ccache-action@v1.2
+    # - name: Cross-compile kernel
+    #   working-directory: linux
+    #   run: |
+    #     mkdir -p ../install/usr
+    #     make STRIP=aarch64-suse-linux-strip AR=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 bcm2711_defconfig
+    #     scripts/config -e CONFIG_BTRFS_FS
+    #     scripts/config -e CONFIG_BTRFS_FS_POSIX_ACL
+    #     scripts/config -e CONFIG_EXFAT_FS
+    #     scripts/config -d CONFIG_HZ_100
+    #     scripts/config -d CONFIG_HZ_250
+    #     scripts/config -d CONFIG_HZ_300
+    #     scripts/config -e CONFIG_HZ_1000
+    #     scripts/config -e CONFIG_NO_HZ_FULL
+    #     scripts/config -e CONFIG_CRASH_DUMP
+    #     scripts/config -e CONFIG_SECURITY_YAMA
+    #     scripts/config -e CONFIG_USERFAULTFD
+    #     scripts/config -e CONFIG_NFT_COMPAT
+    #     make STRIP=aarch64-suse-linux-strip AR=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2
+    #     make STRIP=aarch64-suse-linux-strip AR=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp KERNEL=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 -j2 dtbs
+    #     make STRIP=aarch64-suse-linux-strip AR=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 tarxz-pkg
+    #     make STRIP=aarch64-suse-linux-strip AR=aarch64-suse-linux-ar OBJCOPY=aarch64-suse-linux-objcopy NM=aarch64-suse-linux-nm READELF=aarch64-suse-linux-readelf CC=aarch64-suse-linux-gcc LD=aarch64-suse-linux-ld CXX=aarch64-suse-linux-cpp INSTALL_HDR_PATH=../install/usr kernel=kernel8 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- V=1 headers_install
+    #     cd ../install ; tar -cvf ../linux-headers-6.6.51-v8-arm64.tar usr/ ; cd .. ; xz -9 linux-headers-6.6.51-v8-arm64.tar  
+    - name: Create installer.bin
+      run: truncate -s 4096M installer.bin
+    - name: Create loopback device
+      run: sudo mknod -m 0660 /dev/loop254 b 7 254
+    - name: Mount installer.bin as loopback device
+      run: sudo losetup -P /dev/loop254 installer.bin
+    - name: Create GPT disk label
+      run: sudo parted /dev/loop254 mklabel msdos
+    - name: Create BOOT partition
+      run: sudo parted /dev/loop254 mkpart primary fat32 1 512
+    - name: Create SIDELOAD partition
+      run: sudo parted /dev/loop254 mkpart primary fat32 512 576
+    - name: Create SYSTEM partition
+      run: sudo parted /dev/loop254 mkpart primary ext2 576 4032
+    - name: Toogle boot flag on boot partition
+      run: sudo parted /dev/loop254 set 1 boot on
+    - name: Create BOOT filesystem
+      run: sudo mkfs.vfat -F32 /dev/loop254p1
+    - name: Create SIDELOAD filesystem
+      run: sudo mkfs.exfat /dev/loop254p2
+    - name: Create SYSTEM filesystem
+      run: sudo mkfs.btrfs /dev/loop254p3
+    - name: Mount SYSTEM filesystem
+      run: sudo mount -t btrfs -o compress=zstd:15 /dev/loop254p3 /mnt/
+    - name: Mount BOOT filesystem
+      run: sudo mkdir -p /mnt/boot && sudo mount /dev/loop254p1 /mnt/boot
+    - name: Docker import Void ROOTFS tarball
+      run: curl https://repo-default.voidlinux.org/live/current/void-aarch64-musl-ROOTFS-20250202.tar.xz | xzcat | docker import - voidlinux/voidlinux:latest
+    - name: Docker builder
+      run: docker create --name void-builder voidlinux/voidlinux:latest /bin/bash
+    - name: Add QEMU BINFMT shim
+      run: docker cp /usr/bin/qemu-aarch64 void-builder:/usr/bin/qemu-aarch64
+    - name: Commit builder
+      run: docker commit void-builder voidlinux/voidlinux:latest
+    - name: Docker build
+      run: docker build -t void:latest .
+    - name: Create docker image instance
+      run: docker create --name rpi-image void:latest
+    - name: Docker export
+      run: cd /mnt ; sudo docker export rpi-image | sudo tar --exclude=etc/machine-id --exclude=etc/ssh/*_key* --exclude=etc/ssh/moduli -xf -
+    - name: Free space
+      run: docker rm rpi-image ; docker rmi voidlinux/voidlinux:latest
+    - name: Delete QEMU BINFMT shim
+      run: sudo rm -rf /mnt/usr/bin/qemu-aarch64
+    - name: Home directory
+      run: sudo mkdir -p /mnt/home/pi/.ssh
+    - name: authorized_keys empty file
+      run: sudo touch /mnt/home/pi/.ssh/authorized_keys
+    - name: Create empty machine-id
+      run: sudo touch /mnt/etc/machine-id
+    - name: Copy hosts file
+      run: sudo cp hosts /mnt/etc
+    - name: Copy hostname file
+      run: sudo cp hostname /mnt/etc
+    - name: Make SIDELOAD mountpoint
+      run: sudo mkdir /mnt/mnt/sideload
+    - name: Unmount
+      run: sudo sync && sudo sync && sudo umount /mnt/boot && sudo umount /mnt
+    - name: Disconnect installer.bin
+      run: sudo losetup -D /dev/loop254
+    - name: Move into directory
+      run:  mkdir void_uconsole_os && mv installer.* void_uconsole_os/
+    - name: Archive directory
+      run: sudo 7z -mx=9 a void_uconsole_os-${{ env.stamp }}.7z void_uconsole_os/
+    - name: Create GH release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: void_uconsole_os-${{ env.stamp }}
+        tag_name: ${{ env.stamp }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    - name: Upload zipped image to release artifacts
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: void_uconsole_os-${{ env.stamp }}.7z
+        asset_name: void_uconsole_os-${{ env.stamp }}.7z
+        asset_content_type: application/x-7z-compressed
+    - name: Upload kernel tarball
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: linux/linux-6.6.51-v8-arm64.tar.xz
+        asset_name: linux-6.6.51-v8-arm64.tar.xz
+        asset_content_type: application/x-tar+xz
+    # - name: Upload kernel headers tarball
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ github.token }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: linux-headers-6.6.51-v8-arm64.tar.xz
+    #     asset_name: linux-headers-6.6.51-v8-arm64.tar.xz
+    #     asset_content_type: application/x-tar+xz
