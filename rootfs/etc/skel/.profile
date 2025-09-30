@@ -11,7 +11,3 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-# set PATH for RaspberryPi userland files in /opt/vc/bin if they exist
-if [ -d "/opt/vc/bin" ] ; then
-    PATH="$PATH:/opt/vc/bin"
-fi
