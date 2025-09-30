@@ -9,8 +9,12 @@ while IFS= read -r pkg; do
     echo "ignorepkg=$pkg" >> /etc/xbps.d/ignore.conf
 done < /tmp/blocked_packages.txt
 
+# Update first, and install ca-certificates
+xbps-install -Suy ca-certificates || true
+xbps-install -Su -y || true
+
 # Install packages from list
-cat /tmp/packages.txt | xargs -i xbps-install -Su -y {} || true
+cat /tmp/packages.txt | xargs -i xbps-install -Su -y {}
 
 # Update and cleanup
 xbps-install -Su -y || true
