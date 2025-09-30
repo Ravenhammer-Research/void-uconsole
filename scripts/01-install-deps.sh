@@ -20,4 +20,6 @@ sudo apt-get install -y   \
     python3               \
     python3-pip           \
     parted                \
-    qemu-user-static
+    qemu-user-static      \
+    exfat-fuse            \
+    exfat-utils
