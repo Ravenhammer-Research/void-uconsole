@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# Exit on error
+set -e
+
+# Function to log messages
+log() {
+    echo "[rc.local] $1" | tee -a /var/log/rc.local.log
+}
+
+FIRST_BOOT_FLAG="/var/lib/system/first_boot_completed"
+SIDELOAD_PLAYBOOKS_DIR="/mnt/sideload"
+
+# Create state directory if it doesn't exist
+mkdir -p /var/lib/system
+
+# Check if this is the first boot
+if [ ! -f "$FIRST_BOOT_FLAG" ]; then
+    log "First boot detected - performing initialization tasks..."
+
+    # Resize root filesystem
+    log "Resizing root filesystem..."
+    # Get root partition device
+    ROOT_PART=$(findmnt -n -o SOURCE /)
+    ROOT_DEV=$(echo "$ROOT_PART" | sed 's/[0-9]*$//')
+    PART_NUM=$(echo "$ROOT_PART" | grep -o '[0-9]*$')
+    
+    # Resize partition to fill available space
+    echo ",+" | sfdisk --no-reread -N "$PART_NUM" "$ROOT_DEV"
+    partprobe "$ROOT_DEV"
+    resize2fs "$ROOT_PART"
+    
+    # Generate machine-id
+    log "Generating machine-id..."
+    uuidgen > /etc/machine-id
+
+    # Generate SSH host keys
+    log "Generating SSH host keys..."
+    ssh-keygen -A
+
+    # Mark first boot as completed
+    touch "$FIRST_BOOT_FLAG"
+    log "First boot tasks completed"
+fi
+
+# Run Ansible playbooks if they exist
+if [ -d "$SIDELOAD_PLAYBOOKS_DIR" ]; then
+    if [ -f "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml" ]; then
+        log "Installing Ansible Galaxy requirements..."
+        ansible-galaxy install -r "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml"
+    fi
+
+    # Run all .yml files in the sideload directory
+    find "$SIDELOAD_PLAYBOOKS_DIR" -name "*.yml" -type f | while read playbook; do
+        if [ -f "$playbook" ]; then
+            log "Running Ansible playbook: $playbook"
+            # Run playbook with local connection to avoid SSH requirements
+            ansible-playbook -c local "$playbook"
+        fi
+    done
+fi
+
+exit 0

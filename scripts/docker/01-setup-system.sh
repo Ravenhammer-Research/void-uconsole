@@ -4,9 +4,10 @@ set -euo pipefail
 # Update package manager
 xbps-install -S -u -y xbps
 
-# Configure package ignores
-echo "ignorepkg=linux" > /etc/xbps.d/ignore.conf
-echo "ignorepkg=linux-headers" >> /etc/xbps.d/ignore.conf
+# Configure package ignores from blocked_packages.txt
+while IFS= read -r pkg; do
+    echo "ignorepkg=$pkg" >> /etc/xbps.d/ignore.conf
+done < /tmp/blocked_packages.txt
 
 # Install packages from list
 cat /tmp/packages.txt | xargs -i xbps-install -y -S -R "${REPO}" {} || true

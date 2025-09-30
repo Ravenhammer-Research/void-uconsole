@@ -11,6 +11,7 @@ ENV TIMEZONE=UTC
 
 # Add all configuration files
 ADD packages.txt /tmp/packages.txt
+ADD blocked_packages.txt /tmp/blocked_packages.txt
 ADD rootfs/. /
 
 # Add build scripts

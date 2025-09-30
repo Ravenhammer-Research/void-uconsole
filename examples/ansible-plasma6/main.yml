@@ -1,0 +1,10 @@
+---
+# Main playbook that includes all other playbooks in the correct order
+- name: Install and Configure KDE Plasma 6 with Wayland
+  hosts: localhost
+  become: yes
+
+- import_playbook: setup-network.yml
+- import_playbook: install-plasma.yml
+- import_playbook: configure-wayland.yml
+- import_playbook: configure-user-env.yml
