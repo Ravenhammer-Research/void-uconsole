@@ -10,7 +10,7 @@ while IFS= read -r pkg; do
 done < /tmp/blocked_packages.txt
 
 # Install packages from list
-cat /tmp/packages.txt | xargs -i xbps-install -y -S -R "${REPO}" {} || true
+cat /tmp/packages.txt | xargs -i xbps-install -Su -y {} || true
 
 # Update and cleanup
 xbps-install -Su -y || true
