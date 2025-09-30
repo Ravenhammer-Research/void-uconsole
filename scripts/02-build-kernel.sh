@@ -127,9 +127,10 @@ eval make -j$(nproc) ${TOOLCHAIN}
 # Build DTBs
 eval make -j$(nproc) ${TOOLCHAIN} dtbs
 
-# Get kernel version
-KERNEL_VERSION=$(make ${TOOLCHAIN} kernelrelease)
-echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
+# XXX Get kernel version
+# KERNEL_VERSION=$(make ${TOOLCHAIN} kernelrelease)
+# echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
+echo "KERNEL_VERSION=9999" >> $GITHUB_ENV
 
 # Create kernel package
 eval make ${TOOLCHAIN} tarxz-pkg
