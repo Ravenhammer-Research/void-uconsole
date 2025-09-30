@@ -1,3 +1,6 @@
 linux
 linux-headers
 kernel-libc-headers
+linux-base
+efibootmgr
+rpi-kernel-headers
