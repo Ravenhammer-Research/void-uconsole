@@ -23,6 +23,9 @@ sudo rm -rf /mnt/usr/bin/qemu-aarch64
 # Create mountpoint for sideload partition
 sudo mkdir -p /mnt/mnt/sideload
 
+# Copy Ansible examples to sideload partititon
+sudo cp -r examples/ /mnt/mnt/sideload/
+
 # Sync and unmount
 sudo sync
 sudo umount /mnt/boot

@@ -1,10 +1,5 @@
 FROM voidlinux/voidlinux:latest
 
-ENV WANT_32BIT=1
-ENV WANT_64BIT=1
-ENV WANT_PI4=1
-ENV WANT_PI5=1
-ENV REPO=https://repo-default.voidlinux.org/current
 ENV ARCH=aarch64
 ENV XBPS_ARCH=$ARCH
 ENV TIMEZONE=UTC
