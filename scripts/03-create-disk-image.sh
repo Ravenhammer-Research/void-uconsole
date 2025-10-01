@@ -31,7 +31,7 @@ sudo mount "${LOOP_DEV}p1" /mnt/boot
 
 # Mount sideload partition 
 sudo mkdir -p /mnt/mnt/sideload
-/usr/sbin/mount.exfat-fuse "${LOOP_DEV}p2" /mnt/mnt/sideload
+sudo /usr/sbin/mount.exfat-fuse "${LOOP_DEV}p2" /mnt/mnt/sideload
 
 # Print the loop device for other scripts
 echo "${LOOP_DEV}"
