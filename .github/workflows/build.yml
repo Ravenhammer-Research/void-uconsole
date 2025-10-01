@@ -39,7 +39,7 @@ jobs:
       run: |
         chmod +x scripts/03-create-disk-image.sh
         LOOP_DEV=$(./scripts/03-create-disk-image.sh)
-        echo "LOOP_DEV=${LOOP_DEV}" >> $GITHUB_ENV
+        # XXX echo "LOOP_DEV=${LOOP_DEV}" >> $GITHUB_ENV
 
     - name: Setup system
       run: |
@@ -47,7 +47,7 @@ jobs:
         ./scripts/04-setup-system.sh
 
     - name: Cleanup loop device
-      run: sudo losetup -D ${{ env.LOOP_DEV }}
+      run: sudo losetup -D /dev/loop0 # XXX ${{ env.LOOP_DEV }}
 
     - name: Create release archive
       run: |
