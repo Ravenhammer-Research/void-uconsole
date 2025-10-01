@@ -6,7 +6,7 @@ curl https://repo-default.voidlinux.org/live/current/void-aarch64-musl-ROOTFS-20
     xzcat | docker import - voidlinux/voidlinux:latest
 
 # Build final image
-docker build -t void:latest --volume /usr/bin/qemu-aarch64:/usr/bin/qemu-aarch64:ro .
+docker build -t void:latest .
 docker create --name rpi-image void:latest
 
 # Export system

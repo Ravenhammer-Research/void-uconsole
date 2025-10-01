@@ -4,6 +4,8 @@ ENV ARCH=aarch64
 ENV XBPS_ARCH=$ARCH
 ENV TIMEZONE=UTC
 
+ADD /usr/bin/qemu-aarch64 /usr/bin/qemu-aarch64
+
 # Add all configuration files
 ADD packages.txt /tmp/packages.txt
 ADD blocked_packages.txt /tmp/blocked_packages.txt
