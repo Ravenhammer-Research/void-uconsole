@@ -21,4 +21,5 @@ sudo apt-get install -y   \
     python3-pip           \
     parted                \
     qemu-user-static      \
-    exfat-fuse
+    exfat-fuse            \
+    binfmt-support

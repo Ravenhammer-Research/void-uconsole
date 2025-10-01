@@ -10,28 +10,28 @@ while IFS= read -r pkg; do
 done < /tmp/blocked_packages.txt
 
 # Update first, and install ca-certificates
-xbps-install -Suy ca-certificates || true
-xbps-install -Su -y || true
+xbps-install -Suy ca-certificates
+xbps-install -Su -y
 
 # Install packages from list
 cat /tmp/packages.txt | xargs -i xbps-install -Su -y {}
 
 # Update and cleanup
-xbps-install -Su -y || true
-xbps-remove -yO || true
-xbps-remove -yo || true
-vkpurge rm all || true
+xbps-install -Su -y
+xbps-remove -yO
+xbps-remove -yo
+vkpurge rm all
 
 # Create required groups
-groupadd spi || true
-groupadd i2c || true
-groupadd gpio || true
-groupadd -g 5000 pi || true
+groupadd spi
+groupadd i2c
+groupadd gpio
+groupadd -g 65535 pi
 
 # Create pi user with required groups
-useradd -u 4000 -g pi -s /bin/bash -d /home/pi \
+useradd -u 65535 -g pi -s /bin/bash -d /home/pi \
     -G video,adm,dialout,cdrom,audio,plugdev,users,input,spi,i2c,gpio,scanner,audio,bluetooth \
-    pi || true
+    pi
 
 # Setup home directory
 mkdir -p /home/pi
