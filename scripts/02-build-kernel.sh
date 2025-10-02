@@ -1,20 +1,28 @@
 #!/bin/bash
 set -euox pipefail
 
+# Build kernel with all tools configured
+TOOLCHAIN="STRIP=aarch64-linux-gnu-strip \
+          AR=aarch64-linux-gnu-ar \
+          OBJCOPY=aarch64-linux-gnu-objcopy \
+          NM=aarch64-linux-gnu-nm \
+          READELF=aarch64-linux-gnu-readelf \
+          CC=aarch64-linux-gnu-gcc \
+          LD=aarch64-linux-gnu-ld \
+          CXX=aarch64-linux-gnu-cpp \
+          KERNEL=kernel8 \
+          ARCH=arm64 \
+          CROSS_COMPILE=aarch64-linux-gnu- \
+          V=1"
+
 # Cross-compile kernel
 cd linux
-make STRIP=aarch64-linux-gnu-strip \
-     AR=aarch64-linux-gnu-ar \
-     OBJCOPY=aarch64-linux-gnu-objcopy \
-     NM=aarch64-linux-gnu-nm \
-     READELF=aarch64-linux-gnu-readelf \
-     CC=aarch64-linux-gnu-gcc \
-     LD=aarch64-linux-gnu-ld \
-     CXX=aarch64-linux-gnu-cpp \
-     KERNEL=kernel8 \
-     ARCH=arm64 \
-     CROSS_COMPILE=aarch64-linux-gnu- \
-     V=1 bcm2711_defconfig
+
+make ${TOOLCHAIN} defconfig
+
+make ${TOOLCHAIN} bcm2711_defconfig
+
+make ${TOOLCHAIN} olddefconfig
 
 # Configure kernel options
 scripts/config -d CONFIG_HZ_100
@@ -102,20 +110,6 @@ scripts/config -d CONFIG_MODULES
 scripts/config -d CONFIG_MODIFY_LDT_SYSCALL
 scripts/config -d CONFIG_SECURITY_WRITABLE_HOOKS
 scripts/config -d CONFIG_SECURITY_SELINUX_DISABLE
-
-# Build kernel with all tools configured
-TOOLCHAIN="STRIP=aarch64-linux-gnu-strip \
-          AR=aarch64-linux-gnu-ar \
-          OBJCOPY=aarch64-linux-gnu-objcopy \
-          NM=aarch64-linux-gnu-nm \
-          READELF=aarch64-linux-gnu-readelf \
-          CC=aarch64-linux-gnu-gcc \
-          LD=aarch64-linux-gnu-ld \
-          CXX=aarch64-linux-gnu-cpp \
-          KERNEL=kernel8 \
-          ARCH=arm64 \
-          CROSS_COMPILE=aarch64-linux-gnu- \
-          V=1"
 
 # Build kernel
 eval make -j$(nproc) ${TOOLCHAIN}
