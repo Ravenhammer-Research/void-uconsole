@@ -25,7 +25,7 @@ cd /mnt
 sudo docker export uconsole-image | sudo tar -xvf -
 
 # Cleanup Docker resources
-docker rm rpi-image void-builder
+docker rm uconsole-image void-builder
 docker rmi uconsole:latest voidlinux/voidlinux:latest
 
 # Remove QEMU and setup system directories
