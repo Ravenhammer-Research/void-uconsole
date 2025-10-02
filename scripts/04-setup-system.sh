@@ -6,13 +6,13 @@ curl https://repo-default.voidlinux.org/live/current/void-aarch64-musl-ROOTFS-20
     xzcat | docker import - voidlinux/voidlinux:latest
 
 # Add QEMU for ARM emulation
-docker create --name void-builder voidlinux/voidlinux:latest /bin/bash
+docker create --name void-builder voidlinux/voidlinux:latest
 docker cp /usr/bin/qemu-aarch64-static void-builder:/usr/bin/qemu-aarch64-static
 docker commit void-builder voidlinux/voidlinux:latest
 
 # Build final image
-docker build -t void:latest .
-docker create --name rpi-image void:latest
+docker build -t uconsole:latest .
+docker create --name rpi-image uconsole:latest
 
 # Export system
 cd /mnt
@@ -20,10 +20,10 @@ sudo docker export rpi-image | sudo tar -xvf -
 
 # Cleanup Docker resources
 docker rm rpi-image void-builder
-docker rmi void:latest voidlinux/voidlinux:latest
+docker rmi uconsole:latest voidlinux/voidlinux:latest
 
 # Remove QEMU and setup system directories
-sudo rm -rf /mnt/usr/bin/qemu-aarch64
+sudo rm -rf /mnt/usr/bin/qemu-aarch64-static
 
 # Create mountpoint for sideload partition
 sudo mkdir -p /mnt/mnt/sideload
