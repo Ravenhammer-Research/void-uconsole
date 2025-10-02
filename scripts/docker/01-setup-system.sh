@@ -2,7 +2,7 @@
 set -euox pipefail
 
 # Update package manager
-xbps-install -S -u -y xbps
+xbps-install -S -u -y xbps || true
 
 # Configure package ignores from blocked_packages.txt
 while IFS= read -r pkg; do
@@ -10,17 +10,17 @@ while IFS= read -r pkg; do
 done < /tmp/blocked_packages.txt
 
 # Update first, and install ca-certificates
-xbps-install -Suy ca-certificates
+xbps-install -Suy ca-certificates || true
 xbps-install -Su -y || true
 
 # Install packages from list
-cat /tmp/packages.txt | xargs -i xbps-install -Su -y {}
+cat /tmp/packages.txt | xargs -i xbps-install -Su -y {} || true
 
 # Update and cleanup
-xbps-install -Su -y
-xbps-remove -yO
-xbps-remove -yo
-vkpurge rm all
+xbps-install -Su -y || true
+xbps-remove -yO || true
+xbps-remove -yo || true
+vkpurge rm all || true
 
 # Create required groups
 groupadd spi
