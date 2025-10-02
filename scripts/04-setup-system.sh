@@ -6,7 +6,7 @@ curl https://repo-default.voidlinux.org/live/current/void-aarch64-musl-ROOTFS-20
     xzcat | docker import - voidlinux/voidlinux:latest
 
 # Add QEMU for ARM emulation
-docker create --name void-builder voidlinux/voidlinux:latest
+docker create --name void-builder voidlinux/voidlinux:latest /bin/bash
 docker cp /usr/bin/qemu-aarch64-static void-builder:/usr/bin/qemu-aarch64-static
 docker commit void-builder voidlinux/voidlinux:latest
 
