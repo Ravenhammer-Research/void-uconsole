@@ -23,3 +23,8 @@ sudo apt-get install -y   \
     qemu-user-static      \
     exfat-fuse            \
     binfmt-support
+
+
+sudo mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+
+sudo update-binfmts --enable qemu-aarch64
