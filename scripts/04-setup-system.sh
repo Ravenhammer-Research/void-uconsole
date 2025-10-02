@@ -14,7 +14,6 @@ docker commit void-builder voidlinux/voidlinux:latest
 docker build -t uconsole:latest .
 
 docker run -t -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static:ro \
--v $(pwd)/kernel_tarball:/kernel_tarball:ro \
 -d --name uconsole-image uconsole:latest
 
 docker exec -t uconsole-image /docker/01-setup-system.sh

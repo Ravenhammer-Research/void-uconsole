@@ -16,6 +16,9 @@ RUN chmod +x /docker/*.sh
 # Add source code
 ADD uConsole/. /usr/src/
 
+# Add kernel archives 
+ADD kernel_tarball/*.tar.xz /usr/src/
+
 # Cleanup
 WORKDIR /
 

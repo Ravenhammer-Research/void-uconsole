@@ -100,7 +100,6 @@ scripts/config -d CONFIG_HIBERNATION
 scripts/config -d CONFIG_USELIB
 scripts/config -d CONFIG_MODULES
 scripts/config -d CONFIG_MODIFY_LDT_SYSCALL
-scripts/config -d CONFIG_X86_VSYSCALL_EMULATION
 scripts/config -d CONFIG_SECURITY_WRITABLE_HOOKS
 scripts/config -d CONFIG_SECURITY_SELINUX_DISABLE
 
@@ -148,4 +147,7 @@ make mrproper && make clean
 cd ..
 mkdir -p usr/src
 mv linux usr/src/
-tar --exclude='.git' -cvf - usr/ | xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar.xz
+tar --exclude='.git' -cvf kernel_tarball/linux-source-${KERNEL_VERSION}.tar usr/
+cd kernel_tarball 
+xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar.xz
+cd ..

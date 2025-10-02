@@ -1,8 +1,7 @@
 #!/bin/bash
 set -euox pipefail
 
-cd /kernel_tarball
+cd /usr/src
 
 tar -xJvpf linux-6*.tar.xz -C /
 tar -xJvpf linux-headers-*.tar.xz -C /
-cp *.xz /usr/src

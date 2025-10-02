@@ -1,6 +1,5 @@
 acl
 acpid
-attr
 base-files
 base-system
 bash
@@ -33,6 +32,8 @@ gawk
 clang 
 lldb
 wpa_supplicant
+iw
+wireless_tools
 git
 lldpd
 grep
@@ -107,16 +108,7 @@ rpi-firmware
 rpi-usbboot
 usbip
 alsa-firmware
-broadcom-bt-firmware
 dfu-programmer
 dfu-util
-linux-firmware-db 
-linux-firmware-broadcom
 linux-firmware
-linux-firmware-intel
-linux-firmware-qualcomm
-ipw2200-firmware
-ipw2100-firmware
-wifi-firmware
-zd1211-firmware
 rtl-sdr
