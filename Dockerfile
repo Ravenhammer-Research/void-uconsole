@@ -15,15 +15,8 @@ RUN chmod +x /docker/*.sh
 
 # Add source code
 ADD uConsole/. /usr/src/
-ADD linux /usr/src/linux
-
-# Run build steps
-# RUN /docker/01-setup-system.sh
-# RUN /docker/02-setup-kernel.sh
-# RUN /docker/03-configure-services.sh
 
 # Cleanup
 WORKDIR /
-# RUN rm -rf /usr/src/linux /docker
 
 CMD ["/bin/bash"]

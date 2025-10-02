@@ -86,7 +86,6 @@ traceroute
 tzdata
 util-linux
 which
-xbps
 xfsprogs
 xz
 7zip
