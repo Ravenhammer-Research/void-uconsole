@@ -14,7 +14,7 @@ docker commit void-builder voidlinux/voidlinux:latest
 docker build -t uconsole:latest .
 
 docker run -t -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static:ro \
--v $(pwd)/linux:/usr/src/linux:rw \
+-v $(pwd)/kernel_tarball:/kernel_tarball:ro \
 -d --name uconsole-image uconsole:latest
 
 docker exec -t uconsole-image /docker/01-setup-system.sh
@@ -31,8 +31,6 @@ docker rmi uconsole:latest voidlinux/voidlinux:latest
 
 # Remove QEMU and setup system directories
 sudo rm -rf /mnt/usr/bin/qemu-aarch64-static
-
-sudo mv -f -t /mnt/usr/src/ /mnt/usr/src/linux/*.xz /mnt/usr/src/linux/tar-install/*.xz
 
 # Create mountpoint for sideload partition
 sudo mkdir -p /mnt/mnt/sideload

@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euox pipefail
 
-# Setup directories
-mkdir -p ../install/usr
-
 # Cross-compile kernel
 cd linux
 make STRIP=aarch64-linux-gnu-strip \
@@ -128,18 +125,27 @@ eval make -j$(nproc) ${TOOLCHAIN}
 eval make -j$(nproc) ${TOOLCHAIN} dtbs
 
 # XXX Get kernel version
-# KERNEL_VERSION=$(make ${TOOLCHAIN} kernelrelease)
-# echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
-echo "KERNEL_VERSION=9999" >> $GITHUB_ENV
+KERNEL_VERSION=$(cat .config | grep "Kernel Configuration" | head -n 1 | awk '{print $3}')
+echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
 
 # Create kernel package
 eval make ${TOOLCHAIN} tarxz-pkg
 
 # XXX Install headers
-# eval make ${TOOLCHAIN} INSTALL_HDR_PATH=../install/usr headers_install
+mkdir hdr_install 
+eval make ${TOOLCHAIN} INSTALL_HDR_PATH=hdr_install/usr/local headers_install
 
 # XXX # Package headers
-# cd ../install
-# tar -cvf ../linux-headers-${KERNEL_VERSION}-v8-arm64.tar usr/
-# cd ..
-# xz -9 linux-headers-${KERNEL_VERSION}-v8-arm64.tar
+cd hdr_install
+tar -cvf ../linux-headers-${KERNEL_VERSION}-v8-arm64.tar usr/
+cd ..
+xz -9 linux-headers-${KERNEL_VERSION}-v8-arm64.tar
+
+mkdir ../kernel_tarball
+mv *.xz ../kernel_tarball
+rm -rf hdr_install
+make mrproper && make clean 
+cd ..
+mkdir -p usr/src
+mv linux usr/src/
+tar --exclude='.git' -cvf - usr/ | xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar.xz
