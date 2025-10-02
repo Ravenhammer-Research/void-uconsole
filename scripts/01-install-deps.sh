@@ -25,6 +25,6 @@ sudo apt-get install -y   \
     binfmt-support
 
 
-sudo mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
+sudo mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc || true
 
 sudo update-binfmts --enable qemu-aarch64
