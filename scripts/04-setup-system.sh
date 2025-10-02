@@ -12,11 +12,17 @@ docker commit void-builder voidlinux/voidlinux:latest
 
 # Build final image
 docker build -t uconsole:latest .
-docker create --name rpi-image uconsole:latest
+
+docker run -it -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static:ro \
+-d --name uconsole-image uconsole:latest
+
+docker exec -it uconsole-image /docker/01-setup-system.sh
+docker exec -it uconsole-image /docker/02-setup-kernel.sh
+docker exec -it uconsole-image /docker/03-configure-services.sh
 
 # Export system
 cd /mnt
-sudo docker export rpi-image | sudo tar -xvf -
+sudo docker export uconsole-image | sudo tar -xvf -
 
 # Cleanup Docker resources
 docker rm rpi-image void-builder
