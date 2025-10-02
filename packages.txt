@@ -112,3 +112,4 @@ dfu-programmer
 dfu-util
 linux-firmware
 rtl-sdr
+dkms

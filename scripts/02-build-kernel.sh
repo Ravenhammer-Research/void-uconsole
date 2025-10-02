@@ -124,11 +124,11 @@ echo "KERNEL_VERSION=${KERNEL_VERSION}" >> $GITHUB_ENV
 # Create kernel package
 eval make ${TOOLCHAIN} tarxz-pkg
 
-# XXX Install headers
+# Install headers
 mkdir hdr_install 
 eval make ${TOOLCHAIN} INSTALL_HDR_PATH=hdr_install/usr/local headers_install
 
-# XXX # Package headers
+# Package headers
 cd hdr_install
 tar -cvf ../linux-headers-${KERNEL_VERSION}-v8-arm64.tar usr/
 cd ..
@@ -143,5 +143,5 @@ mkdir -p usr/src
 mv linux usr/src/
 tar --exclude='.git' -cvf kernel_tarball/linux-source-${KERNEL_VERSION}.tar usr/
 cd kernel_tarball 
-xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar.xz
+xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar
 cd ..
