@@ -100,7 +100,6 @@ strace
 cmake
 automake
 autoconf
-qemu-user
 aria2
 openbsd-netcat
 rpi-eeprom
