@@ -11,7 +11,7 @@ done < /tmp/blocked_packages.txt
 
 # Update first, and install ca-certificates
 xbps-install -Suy ca-certificates
-xbps-install -Su -y
+xbps-install -Su -y || true
 
 # Install packages from list
 cat /tmp/packages.txt | xargs -i xbps-install -Su -y {}
