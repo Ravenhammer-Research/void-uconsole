@@ -143,5 +143,5 @@ mkdir -p usr/src
 mv linux usr/src/
 tar --exclude='.git' -cvf kernel_tarball/linux-source-${KERNEL_VERSION}.tar usr/
 cd kernel_tarball 
-xz -9 kernel_tarball/linux-source-${KERNEL_VERSION}.tar
+xz -9 linux-source-${KERNEL_VERSION}.tar
 cd ..
