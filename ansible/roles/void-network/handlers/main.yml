@@ -1,0 +1,26 @@
+---
+# Handlers for void-network role
+
+- name: restart NetworkManager
+  runit:
+    name: NetworkManager
+    state: restarted
+
+- name: restart wpa_supplicant
+  runit:
+    name: wpa_supplicant
+    state: restarted
+
+- name: restart iwd
+  runit:
+    name: iwd
+    state: restarted
+
+- name: restart dhcpcd
+  runit:
+    name: dhcpcd
+    state: restarted
+
+- name: reload network configuration
+  command: "systemctl reload NetworkManager"
+  listen: "reload network"

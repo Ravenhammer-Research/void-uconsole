@@ -35,7 +35,7 @@ sudo rm -rf /mnt/usr/bin/qemu-aarch64-static
 sudo mkdir -p /mnt/mnt/sideload
 
 # Copy Ansible examples to sideload partititon
-sudo cp -r examples/ /mnt/mnt/sideload/
+sudo cp -r ansible/* /mnt/mnt/sideload/
 
 # Sync and unmount
 sudo sync

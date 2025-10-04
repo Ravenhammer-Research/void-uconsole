@@ -1,0 +1,29 @@
+---
+# Default variables for void-multimedia role
+
+# Install audio packages
+void_install_audio: true
+
+# ALSA configuration
+void_alsa_config: {}
+
+# PulseAudio configuration
+void_pulseaudio_config: {}
+
+# PipeWire configuration
+void_pipewire_config: {}
+
+# Audio services to enable
+void_audio_services: ["pipewire", "pipewire-pulse", "wireplumber"]
+
+# Audio backend preference (alsa, pulse, pipewire)
+void_audio_backend: "pipewire"
+
+# Common audio packages
+void_common_audio_packages:
+  - alsa-utils
+  - alsa-plugins
+  - pulseaudio
+  - pipewire
+  - pipewire-pulse
+  - pipewire-alsa

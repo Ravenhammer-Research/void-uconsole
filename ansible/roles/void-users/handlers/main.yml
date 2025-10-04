@@ -1,0 +1,13 @@
+---
+# Handlers for void-users role
+
+- name: reload user configuration
+  command: "pkill -HUP login"
+  listen: "reload users"
+
+- name: restart user services
+  runit:
+    name: "{{ item }}"
+    state: restarted
+  loop: "{{ void_user_services | default([]) }}"
+  listen: "restart user services"

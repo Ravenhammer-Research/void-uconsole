@@ -1,0 +1,36 @@
+---
+# WiFi configuration (3.13.2 - wpa_supplicant, 3.13.3 - IWD)
+# Based on https://docs.voidlinux.org/config/network/index.html
+
+- name: Install WiFi packages
+  xbps:
+    name:
+      - wpa_supplicant
+      - iwd
+      - wireless_tools
+      - iw
+    state: present
+  when: void_install_wifi_packages | default(true)
+
+- name: Configure wpa_supplicant
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+    backup: yes
+    mode: '0600'
+  when: void_wpa_supplicant_config is defined
+
+- name: Configure IWD
+  template:
+    src: iwd.conf.j2
+    dest: /etc/iwd/iwd.conf
+    backup: yes
+  when: void_iwd_config is defined
+
+- name: Enable WiFi services
+  runit:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ void_wifi_services | default(['wpa_supplicant']) }}"
+  when: void_wifi_services is defined

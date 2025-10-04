@@ -1,0 +1,22 @@
+---
+# Handlers for void-services role
+
+- name: restart service
+  runit:
+    name: "{{ service_name }}"
+    state: restarted
+
+- name: reload service
+  runit:
+    name: "{{ service_name }}"
+    state: reloaded
+
+- name: enable service
+  runit:
+    name: "{{ service_name }}"
+    enabled: yes
+
+- name: disable service
+  runit:
+    name: "{{ service_name }}"
+    enabled: no

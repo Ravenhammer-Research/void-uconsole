@@ -1,0 +1,21 @@
+---
+# Default variables for void-wifi role
+
+# Install WiFi packages
+void_install_wifi_packages: true
+
+# wpa_supplicant configuration
+void_wpa_supplicant_config: {}
+
+# IWD configuration
+void_iwd_config: {}
+
+# WiFi services to enable
+void_wifi_services: ["wpa_supplicant"]
+
+# Common WiFi packages
+void_common_wifi_packages:
+  - wpa_supplicant
+  - iwd
+  - wireless_tools
+  - iw

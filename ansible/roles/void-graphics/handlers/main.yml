@@ -1,0 +1,16 @@
+---
+# Handlers for void-graphics role
+
+- name: restart display manager
+  runit:
+    name: "{{ void_display_manager | default('gdm') }}"
+    state: restarted
+
+- name: restart X server
+  command: "pkill -HUP X"
+  listen: "restart x server"
+
+- name: reload graphics drivers
+  command: "modprobe -r {{ item }} && modprobe {{ item }}"
+  loop: "{{ void_graphics_drivers | default([]) }}"
+  listen: "reload graphics drivers"

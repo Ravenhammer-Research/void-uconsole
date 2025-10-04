@@ -1,0 +1,25 @@
+---
+# Default variables for void-printing role
+
+# Install printing packages
+void_install_printing_packages: true
+
+# Enable CUPS
+void_enable_cups: true
+
+# CUPS configuration
+void_cups_config: {}
+
+# Users with print access
+void_print_users: []
+
+# Common printing packages
+void_common_printing_packages:
+  - cups
+  - cups-filters
+  - cups-pdf
+  - ghostscript
+  - gutenprint
+  - foomatic-db
+  - foomatic-db-engine
+  - hplip

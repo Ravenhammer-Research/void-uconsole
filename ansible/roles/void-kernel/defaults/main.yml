@@ -1,0 +1,38 @@
+---
+# Default variables for void-kernel role
+
+# Kernel packages to install
+void_kernel_packages: ["linux"]
+
+# Kernel headers to install
+void_kernel_headers: []
+
+# Kernel modules to install
+void_kernel_modules: []
+
+# Kernel sysctl configuration
+void_kernel_sysctl: {}
+
+# Kernel modules configuration
+void_kernel_modules_config: {}
+
+# Kernel module blacklist
+void_kernel_blacklist: []
+
+# Kernel command line parameters
+void_kernel_cmdline: {}
+
+# Update initramfs
+void_update_initramfs: false
+
+# GRUB configuration
+void_grub_config: {}
+
+# Update GRUB
+void_update_grub: false
+
+# Common kernel packages
+void_common_kernel_packages:
+  - linux
+  - linux-headers
+  - linux-firmware

@@ -1,0 +1,45 @@
+---
+# Printing (3.21)
+
+- name: Install printing packages
+  xbps:
+    name:
+      - cups
+      - cups-filters
+      - cups-pdf
+      - ghostscript
+      - gutenprint
+      - foomatic-db
+      - foomatic-db-engine
+    state: present
+  when: void_install_printing_packages | default(true)
+
+- name: Configure CUPS
+  template:
+    src: cupsd.conf.j2
+    dest: /etc/cups/cupsd.conf
+    backup: yes
+  when: void_cups_config is defined
+
+- name: Enable CUPS service
+  runit:
+    name: cupsd
+    state: started
+    enabled: yes
+  when: void_enable_cups | default(true)
+
+- name: Configure printer permissions
+  file:
+    path: /etc/cups
+    state: directory
+    mode: '0755'
+    owner: root
+    group: lp
+
+- name: Add users to lp group
+  user:
+    name: "{{ item }}"
+    groups: lp
+    append: yes
+  loop: "{{ void_print_users | default([]) }}"
+  when: void_print_users is defined

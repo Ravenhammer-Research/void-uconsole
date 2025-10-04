@@ -1,0 +1,60 @@
+---
+# Core system configuration (3.1, 3.6, 3.7, 3.8)
+# Package Documentation, rc.conf/rc.local/rc.shutdown, Cron, Solid State Drives
+
+- name: Install core system packages
+  xbps:
+    name:
+      - base-system
+      - void-docs
+      - man-pages
+      - cronie
+      - util-linux
+    state: present
+
+- name: Configure rc.conf
+  template:
+    src: rc.conf.j2
+    dest: /etc/rc.conf
+    backup: yes
+  when: void_rc_conf is defined
+  notify: restart services
+
+- name: Configure rc.local
+  template:
+    src: rc.local.j2
+    dest: /etc/rc.local
+    mode: '0755'
+    backup: yes
+  when: void_rc_local is defined
+
+- name: Configure rc.shutdown
+  template:
+    src: rc.shutdown.j2
+    dest: /etc/rc.shutdown
+    mode: '0755'
+    backup: yes
+  when: void_rc_shutdown is defined
+
+- name: Enable cron service
+  runit:
+    name: cronie
+    state: started
+    enabled: yes
+  when: void_enable_cron | default(true)
+
+- name: Configure SSD optimization
+  blockinfile:
+    path: /etc/fstab
+    marker: "# {mark} ANSIBLE MANAGED SSD OPTIMIZATION"
+    block: |
+      # SSD optimization options
+      noatime,noautodefrag,compress=zstd:15
+    when: void_ssd_optimize | default(false)
+
+- name: Install additional documentation
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_doc_packages | default([]) }}"
+  when: void_install_docs | default(false)

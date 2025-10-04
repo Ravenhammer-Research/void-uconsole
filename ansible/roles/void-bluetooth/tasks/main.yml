@@ -1,0 +1,25 @@
+---
+# Bluetooth (3.18)
+
+- name: Install Bluetooth packages
+  xbps:
+    name:
+      - bluez
+      - bluez-utils
+      - blueman
+    state: present
+  when: void_install_bluetooth | default(false)
+
+- name: Configure Bluetooth
+  template:
+    src: bluetooth.conf.j2
+    dest: /etc/bluetooth/main.conf
+    backup: yes
+  when: void_bluetooth_config is defined
+
+- name: Enable Bluetooth service
+  runit:
+    name: bluetoothd
+    state: started
+    enabled: yes
+  when: void_enable_bluetooth | default(false)

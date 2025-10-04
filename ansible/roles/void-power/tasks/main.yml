@@ -1,0 +1,65 @@
+---
+# Power Management (3.12)
+
+- name: Install power management packages
+  xbps:
+    name:
+      - tlp
+      - powertop
+      - cpupower
+      - acpi
+      - acpid
+      - laptop-mode-tools
+    state: present
+  when: void_install_power_packages | default(true)
+
+- name: Configure TLP
+  template:
+    src: tlp.conf.j2
+    dest: /etc/tlp.conf
+    backup: yes
+  when: void_tlp_config is defined
+
+- name: Configure powertop
+  template:
+    src: powertop.conf.j2
+    dest: /etc/powertop.conf
+    backup: yes
+  when: void_powertop_config is defined
+
+- name: Configure CPU power management
+  template:
+    src: cpupower.conf.j2
+    dest: /etc/cpupower.conf
+    backup: yes
+  when: void_cpupower_config is defined
+
+- name: Configure ACPI
+  template:
+    src: acpi.conf.j2
+    dest: /etc/acpi.conf
+    backup: yes
+  when: void_acpi_config is defined
+
+- name: Configure laptop mode tools
+  template:
+    src: laptop-mode.conf.j2
+    dest: /etc/laptop-mode/laptop-mode.conf
+    backup: yes
+  when: void_laptop_mode_config is defined
+
+- name: Enable power management services
+  runit:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ void_power_services | default(['tlp', 'acpid']) }}"
+  when: void_power_services is defined
+
+- name: Configure power management scripts
+  template:
+    src: "{{ item.template }}"
+    dest: "/etc/acpi/{{ item.script }}"
+    mode: '0755'
+  loop: "{{ void_acpi_scripts | default([]) }}"
+  when: void_acpi_scripts is defined

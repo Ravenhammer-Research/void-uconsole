@@ -1,0 +1,30 @@
+---
+# Default variables for void-firmware role
+
+# Install Linux firmware
+void_install_linux_firmware: true
+
+# Install WiFi firmware
+void_install_wifi_firmware: false
+
+# Firmware packages to install
+void_firmware_packages: []
+
+# GPU firmware packages
+void_gpu_firmware: []
+
+# Network firmware packages
+void_network_firmware: []
+
+# Audio firmware packages
+void_audio_firmware: []
+
+# Update firmware database
+void_update_firmware_db: false
+
+# Firmware configuration
+void_firmware_config: {}
+
+# Common firmware packages
+void_common_firmware_packages:
+  - linux-firmware

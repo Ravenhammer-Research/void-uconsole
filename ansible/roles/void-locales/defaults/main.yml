@@ -1,0 +1,23 @@
+---
+# Default variables for void-locales role
+
+# Install locale packages
+void_install_locale_packages: true
+
+# System locale
+void_system_locale: "en_US.UTF-8"
+
+# Locales to generate
+void_locales_to_generate: []
+
+# Locale configuration
+void_locale_config: {}
+
+# Keyboard configuration
+void_keyboard_config: {}
+
+# Timezone
+void_timezone: "UTC"
+
+# Translation packages
+void_translation_packages: []

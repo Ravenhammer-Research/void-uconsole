@@ -1,0 +1,20 @@
+---
+# Handlers for void-security role
+
+- name: restart sshd
+  runit:
+    name: sshd
+    state: restarted
+
+- name: restart apparmor
+  runit:
+    name: apparmor
+    state: restarted
+
+- name: reload sysctl
+  command: "sysctl -p"
+  listen: "reload sysctl"
+
+- name: apply security settings
+  command: "apparmor_parser -r /etc/apparmor.d/*"
+  listen: "reload apparmor"

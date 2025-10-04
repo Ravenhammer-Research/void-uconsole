@@ -1,0 +1,77 @@
+---
+# Network configuration (3.13, 3.13.2, 3.13.3, 3.13.4, 3.13.5)
+# Network, wpa_supplicant, IWD, NetworkManager, ConnMan
+
+- name: Install network packages
+  xbps:
+    name:
+      - NetworkManager
+      - wpa_supplicant
+      - iwd
+      - dhcpcd
+      - iproute2
+      - net-tools
+    state: present
+  when: void_install_network_packages | default(true)
+
+- name: Configure NetworkManager
+  template:
+    src: NetworkManager.conf.j2
+    dest: /etc/NetworkManager/NetworkManager.conf
+    backup: yes
+  when: void_networkmanager_config is defined
+
+- name: Configure wpa_supplicant
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+    backup: yes
+    mode: '0600'
+  when: void_wpa_supplicant_config is defined
+
+- name: Configure IWD
+  template:
+    src: iwd.conf.j2
+    dest: /etc/iwd/iwd.conf
+    backup: yes
+  when: void_iwd_config is defined
+
+- name: Configure ConnMan
+  template:
+    src: connman.conf.j2
+    dest: /etc/connman/connman.conf
+    backup: yes
+  when: void_connman_config is defined
+
+- name: Configure network interfaces
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    backup: yes
+  when: void_network_interfaces is defined
+
+- name: Configure DHCP client
+  template:
+    src: dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+    backup: yes
+  when: void_dhcpcd_config is defined
+
+- name: Configure hostname
+  hostname:
+    name: "{{ void_hostname | default('void') }}"
+  when: void_hostname is defined
+
+- name: Configure hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    backup: yes
+  when: void_hosts_config is defined
+
+- name: Enable network services
+  runit:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ void_network_services | default(['NetworkManager']) }}"

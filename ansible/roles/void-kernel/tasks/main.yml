@@ -1,0 +1,55 @@
+---
+# Kernel (3.11)
+
+- name: Install kernel packages
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_kernel_packages | default(['linux']) }}"
+  when: void_kernel_packages is defined
+
+- name: Install kernel headers
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_kernel_headers | default([]) }}"
+  when: void_kernel_headers is defined
+
+- name: Install kernel modules
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_kernel_modules | default([]) }}"
+  when: void_kernel_modules is defined
+
+- name: Configure kernel parameters
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+    backup: yes
+  when: void_kernel_sysctl is defined
+
+- name: Configure kernel modules
+  template:
+    src: modules.conf.j2
+    dest: /etc/modules.conf
+    backup: yes
+  when: void_kernel_modules_config is defined
+
+- name: Configure module blacklist
+  template:
+    src: blacklist.conf.j2
+    dest: /etc/modprobe.d/blacklist.conf
+    backup: yes
+  when: void_kernel_blacklist is defined
+
+- name: Configure kernel boot parameters
+  template:
+    src: cmdline.j2
+    dest: /etc/cmdline
+    backup: yes
+  when: void_kernel_cmdline is defined
+
+- name: Update initramfs
+  command: "update-initramfs -u"
+  when: void_update_initramfs | default(false)

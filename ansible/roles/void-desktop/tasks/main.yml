@@ -1,0 +1,47 @@
+---
+# Desktop environments (3.16.7 - GNOME, 3.16.8 - KDE)
+# Based on https://docs.voidlinux.org/config/graphical-session/gnome.html
+# Based on https://docs.voidlinux.org/config/graphical-session/kde.html
+
+- name: Install GNOME packages
+  xbps:
+    name:
+      - gnome
+      - gnome-desktop
+      - gnome-shell
+      - gnome-terminal
+      - gnome-control-center
+      - gdm
+    state: present
+  when: void_install_gnome | default(false)
+
+- name: Install KDE packages
+  xbps:
+    name: "{{ void_kde_packages | default(['kde5', 'plasma', 'konsole', 'dolphin', 'sddm']) }}"
+    state: present
+  when: void_install_kde | default(false)
+
+- name: Install XFCE packages
+  xbps:
+    name:
+      - xfce4
+      - xfce4-terminal
+      - thunar
+      - xfce4-settings
+      - lightdm
+    state: present
+  when: void_install_xfce | default(false)
+
+- name: Configure display manager
+  template:
+    src: "{{ void_display_manager_config.template }}"
+    dest: "{{ void_display_manager_config.dest }}"
+    backup: yes
+  when: void_display_manager_config is defined
+
+- name: Enable display manager
+  runit:
+    name: "{{ void_display_manager | default('gdm') }}"
+    state: started
+    enabled: yes
+  when: void_enable_display_manager | default(false)

@@ -1,0 +1,19 @@
+---
+# Handlers for void-multimedia role
+
+- name: restart audio services
+  runit:
+    name: "{{ item }}"
+    state: restarted
+  loop: "{{ void_audio_services | default(['alsa']) }}"
+  listen: "restart audio"
+
+- name: reload audio configuration
+  command: "pulseaudio -k"
+  listen: "reload audio config"
+
+- name: restart pipewire
+  runit:
+    name: pipewire
+    state: restarted
+  listen: "restart pipewire"

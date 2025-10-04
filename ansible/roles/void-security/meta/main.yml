@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: void-linux-ansible
+  description: Security configuration for Void Linux
+  company: Void Linux Community
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Void Linux
+      versions:
+        - all
+  galaxy_tags:
+    - void
+    - linux
+    - security
+    - ssh
+    - apparmor
+dependencies: []

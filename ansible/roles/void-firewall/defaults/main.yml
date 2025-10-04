@@ -1,0 +1,24 @@
+---
+# Default variables for void-firewall role
+
+# Install firewall packages
+void_install_firewall_packages: true
+
+# Enable firewall
+void_enable_firewall: false
+
+# Firewall service to use
+void_firewall_service: "iptables"
+
+# iptables rules
+void_iptables_rules: {}
+
+# nftables configuration
+void_nftables_config: {}
+
+# UFW configuration
+void_ufw_enabled: false
+void_ufw_state: "disabled"
+void_ufw_policy: "deny"
+void_ufw_direction: "incoming"
+void_ufw_rules: []

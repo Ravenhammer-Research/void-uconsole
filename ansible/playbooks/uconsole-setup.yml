@@ -1,0 +1,102 @@
+---
+# uConsole Setup with Wayland, PipeWire, and Plasma 6
+# 
+# This playbook is designed to run from /opt/ansible after copying from /mnt/sideload
+# 
+# IMPORTANT: Set WiFi credentials before running:
+# cd /opt/ansible
+# ansible-playbook examples/uconsole-setup.yml -e "wifi_ssid=YOUR_WIFI_NAME" -e "wifi_password=YOUR_WIFI_PASSWORD"
+#
+# Or create a vars file with your WiFi credentials:
+# echo "wifi_ssid: 'YOUR_WIFI_NAME'" > /mnt/sideload/wifi_vars.yml
+# echo "wifi_password: 'YOUR_WIFI_PASSWORD'" >> /mnt/sideload/wifi_vars.yml
+# cd /opt/ansible
+# ansible-playbook examples/uconsole-setup.yml -e @/mnt/sideload/wifi_vars.yml
+
+- name: Setup uConsole with Wayland, PipeWire, and Plasma 6
+  hosts: localhost
+  connection: local
+  become: yes
+  vars:
+    # Core system configuration
+    void_install_kde: true
+    void_install_wayland: true
+    void_install_audio: true
+    void_audio_backend: "pipewire"
+    void_display_manager: "sddm"
+    void_enable_display_manager: true
+    
+    # WiFi configuration - SET THESE BEFORE RUNNING
+    void_wpa_supplicant_config:
+      country: "US"
+      networks:
+        - ssid: "{{ wifi_ssid | default('YOUR_WIFI_NAME') }}"
+          psk: "{{ wifi_password | default('YOUR_WIFI_PASSWORD') }}"
+          key_mgmt: "WPA-PSK"
+          priority: 1
+    
+    # Network services
+    void_network_services: ["NetworkManager", "wpa_supplicant"]
+    
+    # User configuration
+    void_regular_users:
+      - name: "void"
+        groups: ["wheel", "audio", "video", "input", "seat"]
+        shell: "/bin/bash"
+        create_home: true
+    
+    void_sudo_users:
+      - name: "void"
+        sudo_type: "nopasswd"
+    
+    # Essential packages
+    void_essential_packages:
+      - vim
+      - git
+      - curl
+      - sudo
+      - wget
+      - htop
+      - neofetch
+      - ark
+      - gwenview
+      - okular
+      - spectacle
+      - kfind
+      - kate-plugins
+      - kate-plugins-extra
+
+  tasks:
+    # Install essential packages
+    - name: Install essential packages
+      xbps:
+        name: "{{ void_essential_packages }}"
+        state: present
+
+  roles:
+    # Network and WiFi (MUST BE FIRST)
+    - role: void-network
+      tags: [network, wifi]
+    
+    - role: void-wifi
+      tags: [wifi, wpa_supplicant]
+    
+    # Graphics and Wayland
+    - role: void-graphics
+      tags: [graphics, wayland]
+    
+    # Desktop environment (Plasma 6)
+    - role: void-desktop
+      tags: [desktop, kde, plasma]
+    
+    # Audio system (PipeWire)
+    - role: void-multimedia
+      tags: [audio, pipewire]
+    
+    # User management
+    - role: void-users
+      tags: [users, sudo]
+    
+    # Services
+    - role: void-services
+      tags: [services, runit]

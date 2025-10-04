@@ -8,56 +8,110 @@ log() {
     echo "[rc.local] $1" | tee -a /var/log/rc.local.log
 }
 
-FIRST_BOOT_FLAG="/var/lib/system/first_boot_completed"
+# State flags
+STATE_DIR="/var/lib/system"
+DISK_RESIZED_FLAG="${STATE_DIR}/disk_resized"
+FIRST_BOOT_FLAG="${STATE_DIR}/first_boot_completed"
+ANSIBLE_COMPLETED_FLAG="${STATE_DIR}/ansible_sideload_completed"
 SIDELOAD_PLAYBOOKS_DIR="/mnt/sideload"
 
 # Create state directory if it doesn't exist
-mkdir -p /var/lib/system
+mkdir -p "${STATE_DIR}"
 
-# Check if this is the first boot
-if [ ! -f "$FIRST_BOOT_FLAG" ]; then
-    log "First boot detected - performing initialization tasks..."
-
-    # Resize root filesystem
-    log "Resizing root filesystem..."
+# Function to resize root filesystem
+resize_root_fs() {
+    log "Checking if root filesystem needs resizing..."
+    
     # Get root partition device
     ROOT_PART=$(findmnt -n -o SOURCE /)
     ROOT_DEV=$(echo "$ROOT_PART" | sed 's/[0-9]*$//')
     PART_NUM=$(echo "$ROOT_PART" | grep -o '[0-9]*$')
     
-    # Resize partition to fill available space
-    echo ",+" | sfdisk --no-reread -N "$PART_NUM" "$ROOT_DEV"
-    partprobe "$ROOT_DEV"
-    resize2fs "$ROOT_PART"
+    # Get partition size and disk size
+    PART_SIZE=$(blockdev --getsize64 "$ROOT_PART")
+    DISK_SIZE=$(blockdev --getsize64 "$ROOT_DEV")
+    PART_START=$(sfdisk -d "$ROOT_DEV" | grep "$ROOT_PART" | awk '{print $4}' | tr -d ',')
+    
+    # Calculate maximum possible partition size
+    MAX_SIZE=$((DISK_SIZE - PART_START * 512))
+    
+    # Only resize if partition is not already at maximum size
+    if [ "$PART_SIZE" -lt "$MAX_SIZE" ]; then
+        log "Resizing root filesystem..."
+        echo ",+" | sfdisk --no-reread -N "$PART_NUM" "$ROOT_DEV"
+        partprobe "$ROOT_DEV"
+        resize2fs "$ROOT_PART"
+        touch "$DISK_RESIZED_FLAG"
+        log "Root filesystem resize completed"
+    else
+        log "Root filesystem already at maximum size"
+        touch "$DISK_RESIZED_FLAG"
+    fi
+}
+
+# Function to run Ansible playbooks
+run_ansible_playbooks() {
+    if [ ! -d "$SIDELOAD_PLAYBOOKS_DIR" ]; then
+        log "No sideload directory found at $SIDELOAD_PLAYBOOKS_DIR"
+        return 0
+    fi
+    
+    # Count number of playbooks
+    PLAYBOOK_COUNT=$(find "$SIDELOAD_PLAYBOOKS_DIR" -name "*.yml" -type f | wc -l)
+    if [ "$PLAYBOOK_COUNT" -eq 0 ]; then
+        log "No playbooks found in $SIDELOAD_PLAYBOOKS_DIR"
+        return 0
+    fi
+    
+    log "Found $PLAYBOOK_COUNT playbook(s) to run"
+    
+    if [ -f "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml" ]; then
+        log "Installing Ansible Galaxy requirements..."
+        if ! ansible-galaxy install -r "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml"; then
+            log "Failed to install Ansible Galaxy requirements"
+            return 1
+        fi
+    fi
+    
+    # Run all .yml files in the sideload directory
+    find "$SIDELOAD_PLAYBOOKS_DIR" -name "*.yml" -type f | while read playbook; do
+        log "Running Ansible playbook: $playbook"
+        if ! ansible-playbook -c local "$playbook"; then
+            log "Failed to run playbook: $playbook"
+            return 1
+        fi
+    done
+    
+    touch "$ANSIBLE_COMPLETED_FLAG"
+    log "All Ansible playbooks completed successfully"
+}
+
+# Main execution flow
+
+# Always check and resize disk first if needed
+if [ ! -f "$DISK_RESIZED_FLAG" ]; then
+    resize_root_fs
+fi
+
+# First boot tasks
+if [ ! -f "$FIRST_BOOT_FLAG" ]; then
+    log "First boot detected - performing initialization tasks..."
     
     # Generate machine-id
     log "Generating machine-id..."
     uuidgen > /etc/machine-id
-
+    
     # Generate SSH host keys
     log "Generating SSH host keys..."
     ssh-keygen -A
-
-    # Mark first boot as completed
+    
     touch "$FIRST_BOOT_FLAG"
     log "First boot tasks completed"
 fi
 
-# Run Ansible playbooks if they exist
-if [ -d "$SIDELOAD_PLAYBOOKS_DIR" ]; then
-    if [ -f "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml" ]; then
-        log "Installing Ansible Galaxy requirements..."
-        ansible-galaxy install -r "$SIDELOAD_PLAYBOOKS_DIR/requirements.yml"
-    fi
-
-    # Run all .yml files in the sideload directory
-    find "$SIDELOAD_PLAYBOOKS_DIR" -name "*.yml" -type f | while read playbook; do
-        if [ -f "$playbook" ]; then
-            log "Running Ansible playbook: $playbook"
-            # Run playbook with local connection to avoid SSH requirements
-            ansible-playbook -c local "$playbook"
-        fi
-    done
+# Run Ansible playbooks if not already done
+if [ ! -f "$ANSIBLE_COMPLETED_FLAG" ]; then
+    run_ansible_playbooks
 fi
 
 exit 0

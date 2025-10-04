@@ -1,0 +1,24 @@
+---
+# Default variables for void-users role
+
+# System groups to create
+void_system_groups: []
+
+# Regular groups to create
+void_user_groups: []
+
+# System users to create
+void_system_users: []
+
+# Regular users to create
+void_regular_users: []
+
+# Users with sudo access
+void_sudo_users: []
+
+# SSH keys for users
+void_ssh_keys: []
+
+# Default user configuration
+void_default_user: "void"
+void_default_user_groups: ["wheel", "audio", "video", "optical", "storage", "games", "power", "scanner", "network", "lp", "adm", "wireshark"]

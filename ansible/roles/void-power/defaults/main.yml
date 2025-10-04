@@ -1,0 +1,36 @@
+---
+# Default variables for void-power role
+
+# Install power management packages
+void_install_power_packages: true
+
+# TLP configuration
+void_tlp_config: {}
+
+# powertop configuration
+void_powertop_config: {}
+
+# CPU power management configuration
+void_cpupower_config: {}
+
+# ACPI configuration
+void_acpi_config: {}
+
+# Laptop mode tools configuration
+void_laptop_mode_config: {}
+
+# Power management services
+void_power_services: ["tlp", "acpid"]
+
+# ACPI scripts
+void_acpi_scripts: []
+
+# Common power management packages
+void_common_power_packages:
+  - tlp
+  - powertop
+  - cpupower
+  - acpi
+  - acpid
+  - laptop-mode-tools
+  - thermald

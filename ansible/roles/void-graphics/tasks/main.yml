@@ -1,0 +1,82 @@
+---
+# Graphical Session (3.16, 3.16.1, 3.16.2, 3.16.3, 3.16.4, 3.16.5, 3.16.6, 3.16.7, 3.16.8)
+# Graphics Drivers, Xorg, Wayland, Fonts, Icons, XDG Desktop Portals, GNOME, KDE
+
+- name: Install graphics drivers
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_graphics_drivers | default([]) }}"
+  when: void_graphics_drivers is defined
+
+- name: Install Xorg packages
+  xbps:
+    name:
+      - xorg-server
+      - xorg-apps
+      - xorg-fonts
+      - xorg-libs
+    state: present
+  when: void_install_xorg | default(false)
+
+- name: Install Wayland packages
+  xbps:
+    name: "{{ void_wayland_packages | default(['wayland', 'wayland-protocols', 'mesa-dri', 'mesa-vulkan']) }}"
+    state: present
+  when: void_install_wayland | default(false)
+
+- name: Install desktop environment packages
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_desktop_packages | default([]) }}"
+  when: void_desktop_packages is defined
+
+- name: Install font packages
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_font_packages | default([]) }}"
+  when: void_font_packages is defined
+
+- name: Install icon packages
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_icon_packages | default([]) }}"
+  when: void_icon_packages is defined
+
+- name: Configure Xorg
+  template:
+    src: xorg.conf.j2
+    dest: /etc/X11/xorg.conf
+    backup: yes
+  when: void_xorg_config is defined
+
+- name: Configure Wayland
+  template:
+    src: wayland.conf.j2
+    dest: /etc/wayland/wayland.conf
+    backup: yes
+  when: void_wayland_config is defined
+
+- name: Configure fonts
+  template:
+    src: fonts.conf.j2
+    dest: /etc/fonts/local.conf
+    backup: yes
+  when: void_fonts_config is defined
+
+- name: Configure XDG desktop portals
+  template:
+    src: xdg-desktop-portal.conf.j2
+    dest: /etc/xdg/xdg-desktop-portal.conf
+    backup: yes
+  when: void_xdg_portal_config is defined
+
+- name: Enable display manager
+  runit:
+    name: "{{ void_display_manager | default('gdm') }}"
+    state: started
+    enabled: yes
+  when: void_enable_display_manager | default(false)

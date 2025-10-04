@@ -1,0 +1,35 @@
+---
+# Default variables for void-security role
+
+# Install security packages
+void_install_security_packages: true
+
+# SSH configuration
+void_ssh_config: {}
+
+# AppArmor configuration
+void_apparmor_config: {}
+
+# sysctl configuration
+void_sysctl_config: {}
+
+# Security services to enable
+void_security_services: ["sshd"]
+
+# SSH keys for users
+void_ssh_keys: []
+
+# Security hardening options
+void_hardening_options:
+  disable_root_login: true
+  password_auth: false
+  pubkey_auth: true
+  apparmor_enabled: false
+
+# Common security packages
+void_common_security_packages:
+  - openssh
+  - apparmor
+  - gnupg
+  - haveged
+  - rng-tools

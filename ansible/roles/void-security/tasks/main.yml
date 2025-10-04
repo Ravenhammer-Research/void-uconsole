@@ -1,0 +1,51 @@
+---
+# Security (3.9, 3.9.1)
+# Security, AppArmor
+
+- name: Install security packages
+  xbps:
+    name:
+      - openssh
+      - apparmor
+      - gnupg
+      - haveged
+      - rng-tools
+    state: present
+  when: void_install_security_packages | default(true)
+
+- name: Configure SSH
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    backup: yes
+  when: void_ssh_config is defined
+
+- name: Configure AppArmor
+  template:
+    src: apparmor.conf.j2
+    dest: /etc/apparmor/apparmor.conf
+    backup: yes
+  when: void_apparmor_config is defined
+
+- name: Configure system hardening
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+    backup: yes
+  when: void_sysctl_config is defined
+
+- name: Enable security services
+  runit:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ void_security_services | default(['sshd']) }}"
+  when: void_security_services is defined
+
+- name: Set up SSH keys
+  authorized_key:
+    user: "{{ item.user }}"
+    key: "{{ item.key }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ void_ssh_keys | default([]) }}"
+  when: void_ssh_keys is defined

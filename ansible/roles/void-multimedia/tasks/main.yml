@@ -1,0 +1,53 @@
+---
+# Multimedia (3.17, 3.17.1, 3.17.2, 3.17.3)
+# ALSA, PipeWire, PulseAudio
+
+- name: Install audio packages
+  xbps:
+    name:
+      - alsa-utils
+      - alsa-plugins
+      - pulseaudio
+      - pipewire
+      - pipewire-pulse
+      - pipewire-alsa
+    state: present
+  when: void_install_audio | default(true)
+
+- name: Configure ALSA
+  template:
+    src: asound.conf.j2
+    dest: /etc/asound.conf
+    backup: yes
+  when: void_alsa_config is defined
+
+- name: Configure PulseAudio
+  template:
+    src: pulse-daemon.conf.j2
+    dest: /etc/pulse/daemon.conf
+    backup: yes
+  when: void_pulseaudio_config is defined
+
+- name: Configure PipeWire
+  template:
+    src: pipewire.conf.j2
+    dest: /etc/pipewire/pipewire.conf
+    backup: yes
+  when: void_pipewire_config is defined
+
+- name: Enable audio services
+  runit:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  loop: "{{ void_audio_services | default(['alsa']) }}"
+  when: void_audio_services is defined
+
+- name: Configure audio groups
+  group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - audio
+    - pulse
+    - pulse-access

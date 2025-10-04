@@ -1,0 +1,21 @@
+---
+# Default variables for void-core role
+
+# rc.conf configuration
+void_rc_conf: {}
+
+# rc.local script content
+void_rc_local: ""
+
+# rc.shutdown script content
+void_rc_shutdown: ""
+
+# Enable cron service
+void_enable_cron: true
+
+# SSD optimization
+void_ssd_optimize: false
+
+# Install additional documentation
+void_install_docs: false
+void_doc_packages: []

@@ -1,0 +1,18 @@
+---
+# Handlers for void-core role
+
+- name: restart cronie
+  runit:
+    name: cronie
+    state: restarted
+
+- name: reload system configuration
+  command: "source /etc/rc.conf"
+  listen: "reload rc.conf"
+
+- name: update system
+  xbps:
+    name: "*"
+    state: latest
+    update_cache: true
+  listen: "update system"

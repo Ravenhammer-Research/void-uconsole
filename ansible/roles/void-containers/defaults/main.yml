@@ -1,0 +1,47 @@
+---
+# Default variables for void-containers role
+
+# Install container packages
+void_install_container_packages: true
+
+# Install Docker
+void_install_docker: false
+
+# Install Podman
+void_install_podman: false
+
+# Install LXC
+void_install_lxc: false
+
+# Install libvirt
+void_install_libvirt: false
+
+# Docker configuration
+void_docker_config: {}
+
+# Podman configuration
+void_podman_config: {}
+
+# LXC configuration
+void_lxc_config: {}
+
+# libvirt configuration
+void_libvirt_config: {}
+
+# Container services
+void_container_services: []
+
+# Container networking
+void_container_networking: {}
+
+# Users with container access
+void_container_users: []
+
+# Common container packages
+void_common_container_packages:
+  - docker
+  - podman
+  - lxc
+  - libvirt
+  - qemu
+  - virt-manager

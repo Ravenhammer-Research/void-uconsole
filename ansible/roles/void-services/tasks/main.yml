@@ -1,0 +1,75 @@
+---
+# Services and Daemons - runit (3.5, 3.5.1, 3.5.2)
+# Services and Daemons, Per-User Services, Logging
+
+- name: Install runit packages
+  xbps:
+    name:
+      - runit
+      - runit-services
+      - svlogd
+    state: present
+  when: void_install_runit_packages | default(true)
+
+- name: Create service directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/sv
+    - /var/service
+    - /run/runit
+
+- name: Configure service templates
+  template:
+    src: "{{ item.template }}"
+    dest: "/etc/sv/{{ item.name }}/{{ item.file }}"
+    mode: "{{ item.mode | default('0644') }}"
+  loop: "{{ void_service_templates | default([]) }}"
+  when: void_service_templates is defined
+
+- name: Enable system services
+  runit:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('started') }}"
+    enabled: "{{ item.enabled | default(true) }}"
+  loop: "{{ void_system_services | default([]) }}"
+  when: void_system_services is defined
+
+- name: Create per-user service directories
+  file:
+    path: "{{ item.home }}/.local/share/sv/{{ item.service }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+  loop: "{{ void_per_user_services | default([]) }}"
+  when: void_per_user_services is defined
+
+- name: Configure per-user services
+  template:
+    src: "{{ item.template }}"
+    dest: "{{ item.home }}/.local/share/sv/{{ item.service }}/{{ item.file }}"
+    mode: "{{ item.mode | default('0644') }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+  loop: "{{ void_per_user_service_configs | default([]) }}"
+  when: void_per_user_service_configs is defined
+
+- name: Enable per-user services
+  runit:
+    name: "{{ item.service }}"
+    user: "{{ item.user }}"
+    state: "{{ item.state | default('started') }}"
+    enabled: "{{ item.enabled | default(true) }}"
+  loop: "{{ void_per_user_services | default([]) }}"
+  when: void_per_user_services is defined
+
+- name: Configure logging
+  template:
+    src: svlogd.conf.j2
+    dest: "/etc/sv/{{ item }}/log/conf"
+    mode: '0644'
+  loop: "{{ void_logging_services | default([]) }}"
+  when: void_logging_services is defined

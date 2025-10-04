@@ -1,0 +1,45 @@
+---
+# Default variables for void-graphics role
+
+# Graphics drivers to install
+void_graphics_drivers: []
+
+# Install Xorg
+void_install_xorg: false
+
+# Install Wayland
+void_install_wayland: true
+
+# Desktop packages
+void_desktop_packages: []
+
+# Font packages
+void_font_packages: []
+
+# Icon packages
+void_icon_packages: []
+
+# Xorg configuration
+void_xorg_config: {}
+
+# Wayland configuration
+void_wayland_config: {}
+
+# Wayland packages
+void_wayland_packages:
+  - wayland
+  - wayland-protocols
+  - wayland-utils
+  - xwayland
+  - libxkbcommon
+  - libinput
+
+# Fonts configuration
+void_fonts_config: {}
+
+# XDG desktop portal configuration
+void_xdg_portal_config: {}
+
+# Display manager
+void_display_manager: "gdm"
+void_enable_display_manager: false

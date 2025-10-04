@@ -1,0 +1,85 @@
+---
+# OpenPGP (3.23)
+
+- name: Install OpenPGP packages
+  xbps:
+    name:
+      - gnupg
+      - gnupg2
+      - pinentry
+      - pinentry-gtk
+      - pass
+      - keychain
+    state: present
+  when: void_install_openpgp_packages | default(true)
+
+- name: Configure GnuPG
+  template:
+    src: gpg.conf.j2
+    dest: /etc/gnupg/gpg.conf
+    backup: yes
+  when: void_gpg_config is defined
+
+- name: Configure user GnuPG
+  template:
+    src: gpg.conf.j2
+    dest: "{{ ansible_env.HOME }}/.gnupg/gpg.conf"
+    backup: yes
+  when: void_user_gpg_config is defined
+
+- name: Configure pinentry
+  template:
+    src: pinentry.conf.j2
+    dest: /etc/gnupg/pinentry.conf
+    backup: yes
+  when: void_pinentry_config is defined
+
+- name: Configure keychain
+  template:
+    src: keychain.conf.j2
+    dest: /etc/keychain.conf
+    backup: yes
+  when: void_keychain_config is defined
+
+- name: Set up GPG agent
+  template:
+    src: gpg-agent.conf.j2
+    dest: /etc/gnupg/gpg-agent.conf
+    backup: yes
+  when: void_gpg_agent_config is defined
+
+- name: Import GPG keys
+  command: "gpg --import {{ item }}"
+  args:
+    creates: "{{ ansible_env.HOME }}/.gnupg/pubring.gpg"
+  loop: "{{ void_gpg_keys_to_import | default([]) }}"
+  when: void_gpg_keys_to_import is defined
+
+- name: Configure pass
+  template:
+    src: pass.conf.j2
+    dest: /etc/pass.conf
+    backup: yes
+  when: void_pass_config is defined
+
+- name: Set up GPG directory permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.gnupg"
+    state: directory
+    mode: '0700'
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+
+- name: Set up GPG files permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.gnupg/{{ item }}"
+    state: touch
+    mode: '0600'
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+  loop:
+    - gpg.conf
+    - gpg-agent.conf
+    - pubring.gpg
+    - secring.gpg
+    - trustdb.gpg

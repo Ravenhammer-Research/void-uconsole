@@ -1,0 +1,60 @@
+---
+# Users and Groups management (3.4)
+
+- name: Create system groups
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid | default(omit) }}"
+    system: "{{ item.system | default(true) }}"
+    state: present
+  loop: "{{ void_system_groups | default([]) }}"
+
+- name: Create regular groups
+  group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid | default(omit) }}"
+    state: present
+  loop: "{{ void_user_groups | default([]) }}"
+
+- name: Create system users
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid | default(omit) }}"
+    group: "{{ item.group | default(item.name) }}"
+    groups: "{{ item.groups | default([]) }}"
+    shell: "{{ item.shell | default('/bin/sh') }}"
+    home: "{{ item.home | default('/var/lib/' + item.name) }}"
+    create_home: "{{ item.create_home | default(false) }}"
+    system: "{{ item.system | default(true) }}"
+    state: present
+  loop: "{{ void_system_users | default([]) }}"
+
+- name: Create regular users
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid | default(omit) }}"
+    group: "{{ item.group | default(item.name) }}"
+    groups: "{{ item.groups | default([]) }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    home: "{{ item.home | default('/home/' + item.name) }}"
+    create_home: "{{ item.create_home | default(true) }}"
+    password: "{{ item.password | default(omit) }}"
+    state: present
+  loop: "{{ void_regular_users | default([]) }}"
+
+- name: Configure sudo access
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/{{ item.name }}
+    mode: '0440'
+    backup: yes
+  loop: "{{ void_sudo_users | default([]) }}"
+  when: void_sudo_users is defined
+
+- name: Set up user SSH keys
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.key }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ void_ssh_keys | default([]) }}"
+  when: void_ssh_keys is defined

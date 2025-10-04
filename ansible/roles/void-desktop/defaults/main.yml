@@ -1,0 +1,58 @@
+---
+# Default variables for void-desktop role
+
+# Install GNOME
+void_install_gnome: false
+
+# Install KDE
+void_install_kde: false
+
+# Install XFCE
+void_install_xfce: false
+
+# Display manager
+void_display_manager: "gdm"
+void_enable_display_manager: false
+
+# Display manager configuration
+void_display_manager_config: {}
+
+# Common desktop packages
+void_gnome_packages:
+  - gnome
+  - gnome-desktop
+  - gnome-shell
+  - gnome-terminal
+  - gnome-control-center
+
+void_kde_packages:
+  - plasma-desktop
+  - plasma-workspace
+  - plasma-workspace-wallpapers
+  - plasma-systemmonitor
+  - plasma-pa
+  - plasma-nm
+  - plasma-firewall
+  - plasma-browser-integration
+  - kde-gtk-config
+  - kde-cli-tools
+  - kde-runtime
+  - kwin
+  - kscreen
+  - sddm
+  - sddm-kcm
+  - dolphin
+  - konsole
+  - kate
+  - krunner
+  - kactivitymanagerd
+  - kwin-wayland
+  - kwayland
+  - kwayland-integration
+  - plasma-wayland-session
+
+void_xfce_packages:
+  - xfce4
+  - xfce4-terminal
+  - thunar
+  - xfce4-settings

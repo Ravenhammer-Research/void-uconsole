@@ -1,0 +1,82 @@
+[main]
+{% if void_networkmanager_config.dns is defined %}
+dns={{ void_networkmanager_config.dns }}
+{% else %}
+dns=default
+{% endif %}
+
+{% if void_networkmanager_config.dns_rc_manager is defined %}
+rc-manager={{ void_networkmanager_config.dns_rc_manager }}
+{% else %}
+rc-manager=symlink
+{% endif %}
+
+{% if void_networkmanager_config.dhcp is defined %}
+dhcp={{ void_networkmanager_config.dhcp }}
+{% else %}
+dhcp=internal
+{% endif %}
+
+{% if void_networkmanager_config.no_auto_default is defined %}
+no-auto-default={{ void_networkmanager_config.no_auto_default }}
+{% else %}
+no-auto-default=*
+{% endif %}
+
+{% if void_networkmanager_config.users is defined %}
+users={{ void_networkmanager_config.users }}
+{% endif %}
+
+{% if void_networkmanager_config.auth_polkit is defined %}
+auth-polkit={{ void_networkmanager_config.auth_polkit }}
+{% else %}
+auth-polkit=true
+{% endif %}
+
+[logging]
+{% if void_networkmanager_config.logging_level is defined %}
+level={{ void_networkmanager_config.logging_level }}
+{% else %}
+level=INFO
+{% endif %}
+
+{% if void_networkmanager_config.logging_domains is defined %}
+domains={{ void_networkmanager_config.logging_domains }}
+{% endif %}
+
+[device]
+{% if void_networkmanager_config.device_wifi_backend is defined %}
+wifi.backend={{ void_networkmanager_config.device_wifi_backend }}
+{% else %}
+wifi.backend=wpa_supplicant
+{% endif %}
+
+{% if void_networkmanager_config.device_scan_rand_mac_address is defined %}
+wifi.scan-rand-mac-address={{ void_networkmanager_config.device_scan_rand_mac_address }}
+{% else %}
+wifi.scan-rand-mac-address=no
+{% endif %}
+
+[connectivity]
+{% if void_networkmanager_config.connectivity_uri is defined %}
+uri={{ void_networkmanager_config.connectivity_uri }}
+{% else %}
+uri=http://connectivity-check.ubuntu.com/
+{% endif %}
+
+{% if void_networkmanager_config.connectivity_interval is defined %}
+interval={{ void_networkmanager_config.connectivity_interval }}
+{% else %}
+interval=300
+{% endif %}
+
+{% if void_networkmanager_config.connectivity_response is defined %}
+response={{ void_networkmanager_config.connectivity_response }}
+{% endif %}
+
+[global-dns-domain-*]
+{% if void_networkmanager_config.global_dns_domains is defined %}
+{% for domain in void_networkmanager_config.global_dns_domains %}
+servers={{ domain.servers | join(',') }}
+{% endfor %}
+{% endif %}

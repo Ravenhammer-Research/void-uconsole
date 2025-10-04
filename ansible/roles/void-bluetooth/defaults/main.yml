@@ -1,0 +1,16 @@
+---
+# Default variables for void-bluetooth role
+
+# Install Bluetooth packages
+void_install_bluetooth: false
+
+# Bluetooth configuration
+void_bluetooth_config: {}
+
+# Enable Bluetooth
+void_enable_bluetooth: false
+
+# Common Bluetooth packages
+void_common_bluetooth_packages:
+  - bluez
+  - blueman

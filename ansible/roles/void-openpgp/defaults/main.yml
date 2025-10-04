@@ -1,0 +1,39 @@
+---
+# Default variables for void-openpgp role
+
+# Install OpenPGP packages
+void_install_openpgp_packages: true
+
+# GnuPG configuration
+void_gpg_config: {}
+
+# User GnuPG configuration
+void_user_gpg_config: {}
+
+# pinentry configuration
+void_pinentry_config: {}
+
+# keychain configuration
+void_keychain_config: {}
+
+# GPG agent configuration
+void_gpg_agent_config: {}
+
+# GPG keys to import
+void_gpg_keys_to_import: []
+
+# pass configuration
+void_pass_config: {}
+
+# Common OpenPGP packages
+void_common_openpgp_packages:
+  - gnupg
+  - pinentry
+  - pinentry-gtk
+  - pinentry-qt
+  - pass
+  - keychain
+  - gpgme
+  - libassuan
+  - libgcrypt
+  - libksba

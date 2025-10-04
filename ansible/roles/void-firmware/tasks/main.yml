@@ -1,0 +1,52 @@
+---
+# Firmware (3.2)
+
+- name: Install firmware packages
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_firmware_packages | default([]) }}"
+  when: void_firmware_packages is defined
+
+- name: Install Linux firmware
+  xbps:
+    name:
+      - linux-firmware
+      - linux-firmware-amd
+      - linux-firmware-intel
+      - linux-firmware-nvidia
+    state: present
+  when: void_install_linux_firmware | default(true)
+
+- name: Install WiFi firmware
+  xbps:
+    name:
+      - linux-firmware-wifi
+      - linux-firmware-bluetooth
+    state: present
+  when: void_install_wifi_firmware | default(false)
+
+- name: Install GPU firmware
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_gpu_firmware | default([]) }}"
+  when: void_gpu_firmware is defined
+
+- name: Install network firmware
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_network_firmware | default([]) }}"
+  when: void_network_firmware is defined
+
+- name: Install audio firmware
+  xbps:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ void_audio_firmware | default([]) }}"
+  when: void_audio_firmware is defined
+
+- name: Update firmware database
+  command: "update-firmware-db"
+  when: void_update_firmware_db | default(false)

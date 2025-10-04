@@ -1,0 +1,32 @@
+---
+# Default variables for void-services role
+
+# Install runit packages
+void_install_runit_packages: true
+
+# System services to configure
+void_system_services: []
+
+# Per-user services
+void_per_user_services: []
+
+# Per-user service configurations
+void_per_user_service_configs: []
+
+# Service templates
+void_service_templates: []
+
+# Logging services
+void_logging_services: []
+
+# Common services for different use cases
+void_common_services:
+  - name: "dbus"
+    state: "started"
+    enabled: true
+  - name: "chronyd"
+    state: "started"
+    enabled: true
+  - name: "sshd"
+    state: "started"
+    enabled: true

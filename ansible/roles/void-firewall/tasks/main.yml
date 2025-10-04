@@ -1,0 +1,50 @@
+---
+# Firewalls (3.13.1)
+
+- name: Install firewall packages
+  xbps:
+    name:
+      - iptables
+      - nftables
+      - ufw
+    state: present
+  when: void_install_firewall_packages | default(true)
+
+- name: Configure iptables rules
+  template:
+    src: iptables.rules.j2
+    dest: /etc/iptables/iptables.rules
+    backup: yes
+  when: void_iptables_rules is defined
+
+- name: Configure nftables rules
+  template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    backup: yes
+  when: void_nftables_config is defined
+
+- name: Configure UFW
+  ufw:
+    state: "{{ void_ufw_state | default('disabled') }}"
+    policy: "{{ void_ufw_policy | default('deny') }}"
+    direction: "{{ void_ufw_direction | default('incoming') }}"
+  when: void_ufw_enabled | default(false)
+
+- name: Configure UFW rules
+  ufw:
+    rule: "{{ item.rule }}"
+    port: "{{ item.port | default(omit) }}"
+    proto: "{{ item.proto | default('tcp') }}"
+    src: "{{ item.src | default(omit) }}"
+    dst: "{{ item.dst | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ void_ufw_rules | default([]) }}"
+  when: void_ufw_rules is defined
+
+- name: Enable firewall service
+  runit:
+    name: "{{ void_firewall_service | default('iptables') }}"
+    state: started
+    enabled: yes
+  when: void_enable_firewall | default(false)
