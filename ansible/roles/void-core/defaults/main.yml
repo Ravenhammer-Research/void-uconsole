@@ -2,7 +2,10 @@
 # Default variables for void-core role
 
 # rc.conf configuration
-void_rc_conf: {}
+void_rc_conf:
+  KEYMAP: "us"
+  HARDWARECLOCK: "UTC"
+  FONT: "eurlatgr"
 
 # rc.local script content
 void_rc_local: ""
@@ -10,11 +13,13 @@ void_rc_local: ""
 # rc.shutdown script content
 void_rc_shutdown: ""
 
-# Enable cron service
+# Enable cron service (default: true, can use snooze as alternative)
 void_enable_cron: true
+void_cron_implementation: "cronie"  # Options: cronie, dcron, fcron, snooze
 
 # SSD optimization
 void_ssd_optimize: false
+void_ssd_trim_method: "cron"  # Options: cron, discard, none
 
 # Install additional documentation
 void_install_docs: false

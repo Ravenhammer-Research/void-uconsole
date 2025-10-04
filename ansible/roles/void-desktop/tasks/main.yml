@@ -5,32 +5,45 @@
 
 - name: Install GNOME packages
   xbps:
-    name:
-      - gnome
-      - gnome-desktop
-      - gnome-shell
-      - gnome-terminal
-      - gnome-control-center
-      - gdm
+    name: "{{ void_gnome_packages }}"
     state: present
   when: void_install_gnome | default(false)
 
+- name: Install GNOME apps (optional)
+  xbps:
+    name: gnome-apps
+    state: present
+  when: void_install_gnome_apps | default(false)
+
+- name: Install minimal GNOME core
+  xbps:
+    name: gnome-core
+    state: present
+  when: void_install_gnome_minimal | default(false)
+
 - name: Install KDE packages
   xbps:
-    name: "{{ void_kde_packages | default(['kde5', 'plasma', 'konsole', 'dolphin', 'sddm']) }}"
+    name: "{{ void_kde_packages }}"
     state: present
   when: void_install_kde | default(false)
 
 - name: Install XFCE packages
   xbps:
-    name:
-      - xfce4
-      - xfce4-terminal
-      - thunar
-      - xfce4-settings
-      - lightdm
+    name: "{{ void_xfce_packages }}"
     state: present
   when: void_install_xfce | default(false)
+
+- name: Install XFCE apps (optional)
+  xbps:
+    name: xfce4-apps
+    state: present
+  when: void_install_xfce_apps | default(false)
+
+- name: Install display manager packages
+  xbps:
+    name: "{{ void_display_manager_packages }}"
+    state: present
+  when: void_enable_display_manager | default(false)
 
 - name: Configure display manager
   template:
@@ -42,6 +55,13 @@
 - name: Enable display manager
   runit:
     name: "{{ void_display_manager | default('gdm') }}"
+    state: started
+    enabled: yes
+  when: void_enable_display_manager | default(false)
+
+- name: Enable dbus service (required for display managers)
+  runit:
+    name: dbus
     state: started
     enabled: yes
   when: void_enable_display_manager | default(false)

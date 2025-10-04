@@ -13,4 +13,7 @@ void_enable_bluetooth: false
 # Common Bluetooth packages
 void_common_bluetooth_packages:
   - bluez
+  - bluez-utils
   - blueman
+  - bluez-alsa
+  - bluez-obex

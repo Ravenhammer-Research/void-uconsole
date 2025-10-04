@@ -1,34 +1,77 @@
 ---
 # Multimedia (3.17, 3.17.1, 3.17.2, 3.17.3)
 # ALSA, PipeWire, PulseAudio
+# Based on https://docs.voidlinux.org/config/media/pipewire.html
 
 - name: Install audio packages
   xbps:
-    name:
-      - alsa-utils
-      - alsa-plugins
-      - pulseaudio
-      - pipewire
-      - pipewire-pulse
-      - pipewire-alsa
+    name: "{{ void_common_audio_packages }}"
     state: present
   when: void_install_audio | default(true)
+
+- name: Remove PulseAudio if PipeWire is preferred
+  xbps:
+    name: pulseaudio
+    state: absent
+  when: void_audio_backend == "pipewire"
+
+- name: Create PipeWire configuration directory
+  file:
+    path: /etc/pipewire/pipewire.conf.d
+    state: directory
+    mode: '0755'
+  when: void_audio_backend == "pipewire"
+
+- name: Configure PipeWire session manager (WirePlumber)
+  file:
+    src: /usr/share/examples/wireplumber/10-wireplumber.conf
+    dest: /etc/pipewire/pipewire.conf.d/10-wireplumber.conf
+    state: link
+  when: void_audio_backend == "pipewire"
+
+- name: Configure PipeWire PulseAudio interface
+  file:
+    src: /usr/share/examples/pipewire/20-pipewire-pulse.conf
+    dest: /etc/pipewire/pipewire.conf.d/20-pipewire-pulse.conf
+    state: link
+  when: void_audio_backend == "pipewire"
+
+- name: Configure ALSA integration for PipeWire
+  file:
+    path: /etc/alsa/conf.d
+    state: directory
+    mode: '0755'
+  when: void_audio_backend == "pipewire"
+
+- name: Enable PipeWire ALSA device
+  file:
+    src: /usr/share/alsa/alsa.conf.d/50-pipewire.conf
+    dest: /etc/alsa/conf.d/50-pipewire.conf
+    state: link
+  when: void_audio_backend == "pipewire"
+
+- name: Make PipeWire default ALSA device
+  file:
+    src: /usr/share/alsa/alsa.conf.d/99-pipewire-default.conf
+    dest: /etc/alsa/conf.d/99-pipewire-default.conf
+    state: link
+  when: void_audio_backend == "pipewire"
 
 - name: Configure ALSA
   template:
     src: asound.conf.j2
     dest: /etc/asound.conf
     backup: yes
-  when: void_alsa_config is defined
+  when: void_alsa_config is defined and void_audio_backend != "pipewire"
 
 - name: Configure PulseAudio
   template:
     src: pulse-daemon.conf.j2
     dest: /etc/pulse/daemon.conf
     backup: yes
-  when: void_pulseaudio_config is defined
+  when: void_pulseaudio_config is defined and void_audio_backend == "pulse"
 
-- name: Configure PipeWire
+- name: Configure PipeWire custom configuration
   template:
     src: pipewire.conf.j2
     dest: /etc/pipewire/pipewire.conf
@@ -40,7 +83,7 @@
     name: "{{ item }}"
     state: started
     enabled: yes
-  loop: "{{ void_audio_services | default(['alsa']) }}"
+  loop: "{{ void_audio_services | default(['pipewire', 'wireplumber']) }}"
   when: void_audio_services is defined
 
 - name: Configure audio groups
@@ -49,5 +92,6 @@
     state: present
   loop:
     - audio
+    - video
     - pulse
     - pulse-access

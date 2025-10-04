@@ -3,13 +3,7 @@
 
 - name: Install OpenPGP packages
   xbps:
-    name:
-      - gnupg
-      - gnupg2
-      - pinentry
-      - pinentry-gtk
-      - pass
-      - keychain
+    name: "{{ void_common_openpgp_packages | default(['gnupg', 'pinentry', 'pinentry-gtk', 'pass', 'keychain']) }}"
     state: present
   when: void_install_openpgp_packages | default(true)
 

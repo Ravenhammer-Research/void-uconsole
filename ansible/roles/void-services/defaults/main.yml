@@ -4,8 +4,20 @@
 # Install runit packages
 void_install_runit_packages: true
 
-# System services to configure
+# Service templates
+void_service_templates: []
+
+# Service configuration files
+void_service_configs: []
+
+# Services to disable (create down files)
+void_disabled_services: []
+
+# System services to enable
 void_system_services: []
+
+# System services to disable
+void_disabled_system_services: []
 
 # Per-user services
 void_per_user_services: []
@@ -13,11 +25,14 @@ void_per_user_services: []
 # Per-user service configurations
 void_per_user_service_configs: []
 
-# Service templates
-void_service_templates: []
+# User services to enable
+void_user_services: []
 
 # Logging services
 void_logging_services: []
+
+# Services to test before enabling
+void_test_services: []
 
 # Common services for different use cases
 void_common_services:

@@ -1,0 +1,769 @@
+---
+# Void Linux Package Groups
+# Organized by category for easy installation
+
+# =============================================================================
+# BROWSERS
+# =============================================================================
+void_pkg_browsers:
+  - chromium
+  - firefox
+  - firefox-esr
+  - qutebrowser
+  - falkon
+  - badwolf
+  - epiphany
+  - luakit
+  - lynx
+  - links
+  - w3m
+  - surf
+  - palemoon
+
+# =============================================================================
+# MULTIMEDIA - AUDIO
+# =============================================================================
+void_pkg_audio_players:
+  - audacious
+  - audacity
+  - cmus
+  - mpd
+  - moc
+  - ncmpcpp
+  - rhythmbox
+  - lollypop
+  - elisa
+  - strawberry
+  - deadbeef
+  - quodlibet
+  - cantata
+  - gmusicbrowser
+
+void_pkg_audio_production:
+  - ardour
+  - hydrogen
+  - qtractor
+  - rosegarden
+  - lmms
+  - jack
+  - ladish
+  - carla
+  - qjackctl
+  - jamulus
+  - guitarix2
+  - amsynth
+  - zynaddsubfx
+
+void_pkg_audio_tools:
+  - alsa-utils
+  - pavucontrol
+  - pulsemixer
+  - helvum
+  - qpwgraph
+  - easyeffects
+  - calf
+  - sox
+  - ffmpeg
+  - lame
+  - flac
+  - vorbis-tools
+
+# =============================================================================
+# MULTIMEDIA - VIDEO
+# =============================================================================
+void_pkg_video_players:
+  - mpv
+  - vlc
+  - celluloid
+  - smplayer
+  - kodi
+  - jellyfin-media-player
+  - clapper
+  - parole
+
+void_pkg_video_editors:
+  - kdenlive
+  - shotcut
+  - openshot
+  - flowblade
+  - pitivi
+  - olive-editor
+  - blender
+
+void_pkg_video_tools:
+  - ffmpeg
+  - ffmpeg6
+  - handbrake
+  - obs-studio
+  - simplescreenrecorder
+  - vokoscreen
+  - v4l-utils
+  - webcamoid
+
+# =============================================================================
+# MULTIMEDIA - GRAPHICS & IMAGING
+# =============================================================================
+void_pkg_image_editors:
+  - gimp
+  - inkscape
+  - krita
+  - mypaint
+  - pinta
+  - gthumb
+  - digikam
+  - darktable
+  - rawtherapee
+  - hugin
+
+void_pkg_image_viewers:
+  - feh
+  - sxiv
+  - imv
+  - nomacs
+  - geeqie
+  - viewnior
+  - gwenview
+  - eog
+
+void_pkg_3d_graphics:
+  - blender
+  - freecad
+  - openscad
+  - wings
+  - meshlab
+
+# =============================================================================
+# SDR (SOFTWARE DEFINED RADIO)
+# =============================================================================
+void_pkg_sdr:
+  - gnuradio
+  - gnuradio-osmosdr
+  - gqrx
+  - cubicsdr
+  - soapysdr
+  - rtl-sdr
+  - hackrf
+  - airspy
+  - airspyhf
+  - limesuite
+  - uhd
+  - gr-osmosdr
+  - dump1090
+  - multimon-ng
+  - inspectrum
+  - urh
+  - qsstv
+
+# =============================================================================
+# HAM RADIO
+# =============================================================================
+void_pkg_hamradio:
+  - fldigi
+  - flrig
+  - flamp
+  - fllog
+  - flmsg
+  - flnet
+  - wsjt-x
+  - js8call
+  - xastir
+  - qsstv
+  - cqrlog
+  - xlog
+  - hamlib
+  - direwolf
+  - soundmodem
+  - ax25-tools
+
+# =============================================================================
+# DEVELOPMENT - GENERAL
+# =============================================================================
+void_pkg_dev_core:
+  - gcc
+  - clang
+  - make
+  - cmake
+  - autoconf
+  - automake
+  - pkg-config
+  - git
+  - mercurial
+  - subversion
+  - cvs
+  - tig
+  - lazygit
+  - gdb
+  - valgrind
+  - strace
+  - ltrace
+
+void_pkg_dev_languages:
+  - python3
+  - python3-pip
+  - nodejs
+  - npm
+  - yarn
+  - ruby
+  - perl
+  - php
+  - rust
+  - cargo
+  - go
+  - lua
+  - luajit
+  - julia
+  - erlang
+  - elixir
+  - haskell
+  - ghc
+  - java-openjdk
+
+void_pkg_dev_editors:
+  - vim
+  - neovim
+  - emacs
+  - vscode
+  - vscodium
+  - sublime-text4
+  - gedit
+  - kate
+  - geany
+  - micro
+  - nano
+  - helix
+
+void_pkg_dev_ide:
+  - qtcreator
+  - kdevelop
+  - codeblocks
+  - eclipse
+  - netbeans
+  - intellij-idea-community-edition
+  - android-studio
+
+# =============================================================================
+# COMMUNICATION
+# =============================================================================
+void_pkg_comm_email:
+  - thunderbird
+  - evolution
+  - geary
+  - neomutt
+  - mu
+  - aerc
+  - himalaya
+
+void_pkg_comm_chat:
+  - telegram-desktop
+  - signal-desktop
+  - element-desktop
+  - hexchat
+  - irssi
+  - weechat
+  - discord
+  - slack-desktop
+  - gajim
+  - dino
+  - pidgin
+  - profanity
+
+void_pkg_comm_voip:
+  - mumble
+  - teamspeak3
+  - zoom
+  - jitsi
+  - linphone
+  - ekiga
+
+# =============================================================================
+# OFFICE & PRODUCTIVITY
+# =============================================================================
+void_pkg_office:
+  - libreoffice
+  - abiword
+  - gnumeric
+  - calligra
+  - focuswriter
+  - ghostwriter
+  - apostrophe
+  - typora
+  - zettlr
+
+void_pkg_pdf:
+  - evince
+  - okular
+  - zathura
+  - mupdf
+  - xpdf
+  - qpdfview
+  - pdfarranger
+
+void_pkg_ebooks:
+  - calibre
+  - foliate
+  - bookworm
+  - fbreader
+
+# =============================================================================
+# SYSTEM TOOLS
+# =============================================================================
+void_pkg_system_monitors:
+  - htop
+  - btop
+  - glances
+  - nethogs
+  - iotop
+  - powertop
+  - s-tui
+  - gotop
+
+void_pkg_system_utils:
+  - tmux
+  - screen
+  - zellij
+  - rsync
+  - rclone
+  - syncthing
+  - fzf
+  - fd
+  - ripgrep
+  - eza
+  - bat
+  - duf
+  - dust
+  - procs
+  - zoxide
+
+void_pkg_disk_tools:
+  - gparted
+  - gnome-disk-utility
+  - baobab
+  - ncdu
+  - duf
+  - smartmontools
+  - hdparm
+
+void_pkg_backup:
+  - borg
+  - restic
+  - duplicity
+  - rsnapshot
+  - timeshift
+  - deja-dup
+
+# =============================================================================
+# NETWORKING
+# =============================================================================
+void_pkg_network_tools:
+  - nmap
+  - wireshark
+  - tcpdump
+  - iftop
+  - nethogs
+  - bmon
+  - vnstat
+  - ethtool
+  - wavemon
+  - iw
+  - wireless_tools
+
+void_pkg_network_apps:
+  - filezilla
+  - putty
+  - remmina
+  - openssh
+  - openvpn
+  - wireguard-tools
+  - tailscale
+  - zerotier-one
+
+# =============================================================================
+# SECURITY & PRIVACY
+# =============================================================================
+void_pkg_security:
+  - keepassxc
+  - pass
+  - gnupg
+  - tomb
+  - veracrypt
+  - luks-tools
+  - encfs
+  - gocryptfs
+
+void_pkg_security_tools:
+  - nmap
+  - metasploit
+  - aircrack-ng
+  - john
+  - hashcat
+  - hydra
+  - burpsuite
+  - zaproxy
+  - nikto
+  - sqlmap
+
+void_pkg_anonymity:
+  - tor
+  - torbrowser-launcher
+  - i2pd
+  - freenet
+  - gnunet
+
+# =============================================================================
+# GAMING
+# =============================================================================
+void_pkg_gaming:
+  - steam
+  - lutris
+  - wine
+  - winetricks
+  - gamemode
+  - gamescope
+  - mangohud
+  - retroarch
+  - dosbox
+  - scummvm
+
+void_pkg_emulators:
+  - retroarch
+  - ppsspp
+  - dolphin-emu
+  - pcsx2
+  - rpcs3
+  - yuzu
+  - citra
+  - desmume
+  - mgba
+  - snes9x-gtk
+  - fceux
+
+# =============================================================================
+# CLOUD & CONTAINERS
+# =============================================================================
+void_pkg_containers:
+  - docker
+  - docker-compose
+  - podman
+  - buildah
+  - kubernetes
+  - k3s
+  - lxc
+  - lxd
+  - incus
+
+void_pkg_cloud_tools:
+  - terraform
+  - ansible
+  - vagrant
+  - kubectl
+  - helm
+  - k9s
+  - aws-cli
+  - azure-cli
+  - gcloud
+
+# =============================================================================
+# DATABASES
+# =============================================================================
+void_pkg_databases:
+  - postgresql
+  - mariadb
+  - mysql
+  - sqlite
+  - redis
+  - mongodb
+  - cassandra
+  - influxdb
+  - prometheus
+
+# =============================================================================
+# WEB DEVELOPMENT
+# =============================================================================
+void_pkg_webdev:
+  - apache
+  - nginx
+  - lighttpd
+  - caddy
+  - php
+  - php-fpm
+  - nodejs
+  - npm
+  - yarn
+  - hugo
+  - jekyll
+  - pelican
+
+# =============================================================================
+# VIRTUALIZATION
+# =============================================================================
+void_pkg_virtualization:
+  - qemu
+  - libvirt
+  - virt-manager
+  - virt-viewer
+  - virtualbox-ose
+  - vagrant
+  - vmware-horizon-client
+
+# =============================================================================
+# FONTS
+# =============================================================================
+void_pkg_fonts:
+  - dejavu-fonts-ttf
+  - liberation-fonts-ttf
+  - noto-fonts-ttf
+  - noto-fonts-emoji
+  - font-awesome
+  - font-awesome6
+  - fonts-roboto-ttf
+  - font-firacode
+  - font-hack-ttf
+  - font-iosevka
+  - terminus-font
+  - unifont-bdf
+
+# =============================================================================
+# FILE MANAGERS
+# =============================================================================
+void_pkg_filemanagers:
+  - thunar
+  - pcmanfm
+  - dolphin
+  - nautilus
+  - caja
+  - nemo
+  - ranger
+  - lf
+  - nnn
+  - vifm
+  - mc
+
+# =============================================================================
+# TERMINAL EMULATORS
+# =============================================================================
+void_pkg_terminals:
+  - alacritty
+  - kitty
+  - wezterm
+  - foot
+  - st
+  - terminator
+  - tilix
+  - konsole
+  - gnome-terminal
+  - xfce4-terminal
+  - rxvt-unicode
+  - xterm
+
+# =============================================================================
+# WINDOW MANAGERS & COMPOSITORS
+# =============================================================================
+void_pkg_wm_x11:
+  - i3
+  - bspwm
+  - awesome
+  - xmonad
+  - dwm
+  - openbox
+  - fluxbox
+  - herbstluftwm
+  - qtile
+
+void_pkg_wm_wayland:
+  - sway
+  - hyprland
+  - river
+  - wayfire
+  - labwc
+  - dwl
+  - hikari
+  - cage
+
+# =============================================================================
+# SCIENTIFIC & MATHEMATICS
+# =============================================================================
+void_pkg_scientific:
+  - octave
+  - gnuplot
+  - maxima
+  - sage
+  - scilab
+  - r
+  - julia
+  - python3-numpy
+  - python3-scipy
+  - python3-matplotlib
+
+# =============================================================================
+# ASTRONOMY
+# =============================================================================
+void_pkg_astronomy:
+  - stellarium
+  - celestia
+  - kstars
+  - celestia-glut
+  - xplanet
+  - gpredict
+
+# =============================================================================
+# ARCHIVING & COMPRESSION
+# =============================================================================
+void_pkg_archiving:
+  - p7zip
+  - unzip
+  - unrar
+  - lzip
+  - lzop
+  - xz
+  - zstd
+  - tar
+  - bzip2
+  - gzip
+  - ark
+  - file-roller
+  - xarchiver
+  - engrampa
+
+# =============================================================================
+# DOWNLOAD MANAGERS
+# =============================================================================
+void_pkg_downloaders:
+  - aria2
+  - wget
+  - curl
+  - yt-dlp
+  - youtube-dl
+  - transmission
+  - deluge
+  - qbittorrent
+  - rtorrent
+  - uget
+
+# =============================================================================
+# RSS & NEWS READERS
+# =============================================================================
+void_pkg_rss:
+  - newsboat
+  - liferea
+  - rssguard
+  - quiterss
+  - feedreader
+  - newsflash
+
+# =============================================================================
+# SCREENSHOT & SCREEN RECORDING
+# =============================================================================
+void_pkg_screenshot:
+  - flameshot
+  - maim
+  - scrot
+  - grim
+  - slurp
+  - spectacle
+  - gnome-screenshot
+  - xfce4-screenshooter
+
+void_pkg_screencast:
+  - obs-studio
+  - simplescreenrecorder
+  - vokoscreenNG
+  - wf-recorder
+  - kooha
+  - peek
+
+# =============================================================================
+# MUSIC PRODUCTION
+# =============================================================================
+void_pkg_music_production:
+  - ardour
+  - lmms
+  - qtractor
+  - rosegarden
+  - hydrogen
+  - musescore
+  - lilypond
+  - tuxguitar
+  - guitarix2
+  - rakarrack
+
+# =============================================================================
+# CAD & 3D MODELING
+# =============================================================================
+void_pkg_cad:
+  - freecad
+  - openscad
+  - librecad
+  - qcad
+  - kicad
+  - geda-gaf
+
+# =============================================================================
+# ELECTRONICS
+# =============================================================================
+void_pkg_electronics:
+  - kicad
+  - geda-gaf
+  - ngspice
+  - qucs
+  - fritzing
+  - arduino
+  - platformio
+
+# =============================================================================
+# PACKAGE GROUPS META
+# =============================================================================
+# Use these variables to install complete desktop environments
+void_pkg_desktop_kde:
+  - kde-plasma
+  - kde-baseapps
+  - dolphin
+  - konsole
+  - kate
+  - gwenview
+  - okular
+  - ark
+  - spectacle
+
+void_pkg_desktop_gnome:
+  - gnome
+  - gnome-apps
+  - gnome-tweaks
+  - gnome-shell-extensions
+  - gnome-terminal
+
+void_pkg_desktop_xfce:
+  - xfce4
+  - xfce4-plugins
+  - thunar
+  - xfce4-terminal
+  - mousepad
+  - ristretto
+
+void_pkg_desktop_mate:
+  - mate-desktop
+  - mate-applets
+  - mate-utils
+  - mate-media
+  - caja
+
+void_pkg_desktop_cinnamon:
+  - cinnamon
+  - cinnamon-control-center
+  - cinnamon-screensaver
+  - nemo
+
+# Complete workstation setup
+void_pkg_workstation_complete:
+  - firefox
+  - thunderbird
+  - libreoffice
+  - gimp
+  - inkscape
+  - vlc
+  - telegram-desktop
+  - keepassxc
+  - syncthing
+  - htop
+  - vim
+  - git
+

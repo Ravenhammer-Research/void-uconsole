@@ -1,18 +1,81 @@
 ---
 # Network configuration (3.13, 3.13.2, 3.13.3, 3.13.4, 3.13.5)
 # Network, wpa_supplicant, IWD, NetworkManager, ConnMan
+# Based on https://docs.voidlinux.org/config/network/index.html
+#
+# Note: wpa_supplicant is typically pre-installed in base images for WiFi connectivity
 
-- name: Install network packages
+- name: Install basic network packages (pre-installed compatible)
   xbps:
-    name:
-      - NetworkManager
-      - wpa_supplicant
-      - iwd
-      - dhcpcd
-      - iproute2
-      - net-tools
+    name: "{{ void_common_network_packages }}"
     state: present
-  when: void_install_network_packages | default(true)
+
+- name: Configure wpa_supplicant (before installing NetworkManager)
+  template:
+    src: wpa_supplicant.conf.j2
+    dest: /etc/wpa_supplicant/wpa_supplicant.conf
+    backup: yes
+  when: void_wpa_supplicant_config is defined
+
+- name: Start wpa_supplicant for initial connectivity
+  runit:
+    name: wpa_supplicant
+    state: started
+    enabled: yes
+  when: void_enable_wpa_supplicant | default(true)
+
+- name: Start dhcpcd for IP assignment
+  runit:
+    name: dhcpcd
+    state: started
+    enabled: yes
+  when: void_enable_dhcpcd | default(true)
+
+- name: Wait for network connectivity
+  wait_for_connection:
+    timeout: 30
+  when: void_install_additional_network_packages | default(false)
+
+- name: Install additional network packages (requires internet)
+  xbps:
+    name: "{{ void_additional_network_packages }}"
+    state: present
+  when: void_install_additional_network_packages | default(false)
+
+- name: Ensure wpa_supplicant is available (already installed in base image)
+  xbps:
+    name: wpa_supplicant
+    state: present
+  ignore_errors: yes
+
+- name: Disable conflicting network services
+  runit:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  loop: "{{ void_disabled_network_services | default([]) }}"
+  when: void_disabled_network_services is defined
+
+- name: Enable dbus service (required for NetworkManager)
+  runit:
+    name: dbus
+    state: started
+    enabled: yes
+  when: void_enable_networkmanager | default(false) and void_install_additional_network_packages | default(false)
+
+- name: Enable NetworkManager
+  runit:
+    name: NetworkManager
+    state: started
+    enabled: yes
+  when: void_enable_networkmanager | default(false) and void_install_additional_network_packages | default(false)
+
+- name: Enable iwd
+  runit:
+    name: iwd
+    state: started
+    enabled: yes
+  when: void_enable_iwd | default(false)
 
 - name: Configure NetworkManager
   template:
@@ -21,18 +84,11 @@
     backup: yes
   when: void_networkmanager_config is defined
 
-- name: Configure wpa_supplicant
-  template:
-    src: wpa_supplicant.conf.j2
-    dest: /etc/wpa_supplicant/wpa_supplicant.conf
-    backup: yes
-    mode: '0600'
-  when: void_wpa_supplicant_config is defined
 
-- name: Configure IWD
+- name: Configure iwd
   template:
     src: iwd.conf.j2
-    dest: /etc/iwd/iwd.conf
+    dest: /etc/iwd/main.conf
     backup: yes
   when: void_iwd_config is defined
 
@@ -57,6 +113,12 @@
     backup: yes
   when: void_dhcpcd_config is defined
 
+- name: Ensure dhcpcd is available (for initial network setup)
+  xbps:
+    name: dhcpcd
+    state: present
+  ignore_errors: yes
+
 - name: Configure hostname
   hostname:
     name: "{{ void_hostname | default('void') }}"
@@ -75,3 +137,11 @@
     state: started
     enabled: yes
   loop: "{{ void_network_services | default(['NetworkManager']) }}"
+
+- name: Add users to network group
+  user:
+    name: "{{ item }}"
+    groups: network
+    append: yes
+  loop: "{{ void_network_users | default([]) }}"
+  when: void_network_users is defined

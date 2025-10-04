@@ -19,6 +19,35 @@ void_sudo_users: []
 # SSH keys for users
 void_ssh_keys: []
 
-# Default user configuration
-void_default_user: "void"
-void_default_user_groups: ["wheel", "audio", "video", "optical", "storage", "games", "power", "scanner", "network", "lp", "adm", "wireshark"]
+# User shell changes
+void_user_shells: []
+
+# Enable wheel group sudo access
+void_enable_wheel_sudo: false
+
+# Enable wheel group sudo access (nopasswd)
+void_enable_wheel_sudo_nopasswd: false
+
+# Default user configuration (legacy support)
+void_users:
+  - name: "pi"
+    groups:
+      - wheel      # admin/sudo
+      - audio      # sound
+      - video      # video
+      - input      # input devices
+      - plugdev    # pluggable devices
+      - lp         # printing
+      - network    # network management
+      - scanner    # scanner access
+      - users      # ordinary users
+    shell: "/bin/bash"
+    create_home: true
+    password: ""
+
+# Default shell options
+void_shells:
+  - /bin/bash
+  - /bin/sh
+  - /bin/dash
+  - /bin/zsh

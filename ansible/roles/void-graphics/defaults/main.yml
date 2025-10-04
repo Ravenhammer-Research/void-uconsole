@@ -19,10 +19,21 @@ void_font_packages:
   - noto-fonts-ttf
   - noto-fonts-cjk
   - noto-fonts-emoji
+  - liberation-fonts-ttf
+  - font-liberation-narrow-ttf
+  - font-fira-ttf
+  - font-firacode
+  - ttf-ubuntu-font-family
+  - adwaita-fonts
+  - cantarell-fonts
 
 # Icon packages
 void_icon_packages:
   - adwaita-icon-theme
+  - breeze-icons
+  - papirus-icon-theme
+  - arc-icon-theme
+  - faenza-icon-theme
 
 # Xorg configuration
 void_xorg_config: {}
@@ -40,6 +51,10 @@ void_wayland_packages:
   - qt5-wayland
   - qt6-wayland
   - kwayland
+  - kwayland-integration
+  - plasma-wayland-protocols
+  - sway
+  - weston
 
 # Fonts configuration
 void_fonts_config: {}

@@ -3,10 +3,7 @@
 
 - name: Install Bluetooth packages
   xbps:
-    name:
-      - bluez
-      - bluez-utils
-      - blueman
+    name: "{{ void_common_bluetooth_packages | default(['bluez', 'bluez-utils', 'blueman']) }}"
     state: present
   when: void_install_bluetooth | default(false)
 

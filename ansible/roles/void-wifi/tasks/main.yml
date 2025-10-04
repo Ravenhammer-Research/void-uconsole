@@ -4,33 +4,33 @@
 
 - name: Install WiFi packages
   xbps:
-    name:
-      - wpa_supplicant
-      - iwd
-      - wireless_tools
-      - iw
+    name: "{{ void_common_wifi_packages }}"
     state: present
-  when: void_install_wifi_packages | default(true)
+
+- name: Enable wpa_supplicant
+  runit:
+    name: wpa_supplicant
+    state: started
+    enabled: yes
+  when: void_enable_wpa_supplicant | default(true)
+
+- name: Enable iwd
+  runit:
+    name: iwd
+    state: started
+    enabled: yes
+  when: void_enable_iwd | default(false)
 
 - name: Configure wpa_supplicant
   template:
     src: wpa_supplicant.conf.j2
     dest: /etc/wpa_supplicant/wpa_supplicant.conf
     backup: yes
-    mode: '0600'
   when: void_wpa_supplicant_config is defined
 
 - name: Configure IWD
   template:
     src: iwd.conf.j2
-    dest: /etc/iwd/iwd.conf
+    dest: /etc/iwd/main.conf
     backup: yes
   when: void_iwd_config is defined
-
-- name: Enable WiFi services
-  runit:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-  loop: "{{ void_wifi_services | default(['wpa_supplicant']) }}"
-  when: void_wifi_services is defined

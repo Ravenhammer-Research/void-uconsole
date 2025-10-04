@@ -2,21 +2,13 @@
 # Core system configuration (3.1, 3.6, 3.7, 3.8)
 # Package Documentation, rc.conf/rc.local/rc.shutdown, Cron, Solid State Drives
 
-- name: Install core system packages
-  xbps:
-    name:
-      - base-system
-      - void-docs
-      - man-pages
-      - cronie
-      - util-linux
-    state: present
-
 - name: Configure rc.conf
   template:
     src: rc.conf.j2
     dest: /etc/rc.conf
     backup: yes
+  vars:
+    rc_conf_vars: "{{ void_rc_conf }}"
   when: void_rc_conf is defined
   notify: restart services
 
@@ -36,21 +28,44 @@
     backup: yes
   when: void_rc_shutdown is defined
 
+- name: Install cron implementation
+  xbps:
+    name: "{{ void_cron_implementation }}"
+    state: present
+  when: void_enable_cron | default(true)
+
 - name: Enable cron service
   runit:
-    name: cronie
+    name: "{{ void_cron_implementation }}"
     state: started
     enabled: yes
   when: void_enable_cron | default(true)
 
-- name: Configure SSD optimization
-  blockinfile:
+- name: Set up SSD TRIM cron job
+  copy:
+    dest: /etc/cron.weekly/fstrim
+    content: |
+      #!/bin/sh
+      fstrim /
+    mode: '0755'
+  when: void_ssd_optimize | default(false) and void_ssd_trim_method == 'cron'
+
+- name: Ensure discard option in fstab for SSD
+  lineinfile:
     path: /etc/fstab
-    marker: "# {mark} ANSIBLE MANAGED SSD OPTIMIZATION"
-    block: |
-      # SSD optimization options
-      noatime,noautodefrag,compress=zstd:15
-    when: void_ssd_optimize | default(false)
+    regexp: '^(.*\s/\s.*\s(ext4|btrfs|f2fs)\s)(.*)$'
+    line: '\1\3,discard'
+    backrefs: yes
+  when: void_ssd_optimize | default(false) and void_ssd_trim_method == 'discard'
+
+- name: Install core system packages
+  xbps:
+    name:
+      - base-system
+      - void-docs
+      - man-pages
+      - util-linux
+    state: present
 
 - name: Install additional documentation
   xbps:

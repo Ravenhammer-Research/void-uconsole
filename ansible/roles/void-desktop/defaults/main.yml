@@ -10,6 +10,15 @@ void_install_kde: false
 # Install XFCE
 void_install_xfce: false
 
+# Install GNOME apps
+void_install_gnome_apps: false
+
+# Install minimal GNOME core
+void_install_gnome_minimal: false
+
+# Install XFCE apps
+void_install_xfce_apps: false
+
 # Display manager
 void_display_manager: "gdm"
 void_enable_display_manager: false
@@ -20,24 +29,19 @@ void_display_manager_config: {}
 # Common desktop packages
 void_gnome_packages:
   - gnome
-  - gnome-desktop
-  - gnome-shell
-  - gnome-terminal
-  - gnome-control-center
+  - gdm
 
 void_kde_packages:
   - kde-plasma
   - kde-baseapps
   - sddm
-  - dolphin
-  - konsole
-  - kate
-  - krunner
-  - kdegraphics-thumbnailers
-  - ffmpegthumbs
 
 void_xfce_packages:
   - xfce4
-  - xfce4-terminal
-  - thunar
-  - xfce4-settings
+  - lightdm
+
+# Display manager packages
+void_display_manager_packages:
+  - gdm
+  - sddm
+  - lightdm

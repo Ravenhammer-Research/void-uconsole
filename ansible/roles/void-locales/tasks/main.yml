@@ -3,10 +3,7 @@
 
 - name: Install locale packages
   xbps:
-    name:
-      - glibc-locales
-      - musl-locales
-      - locale
+    name: "{{ void_locale_packages | default(['glibc-locales']) }}"
     state: present
   when: void_install_locale_packages | default(true)
 

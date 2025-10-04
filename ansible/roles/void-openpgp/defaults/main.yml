@@ -30,10 +30,6 @@ void_common_openpgp_packages:
   - gnupg
   - pinentry
   - pinentry-gtk
-  - pinentry-qt
+  - pinentry-gnome
   - pass
   - keychain
-  - gpgme
-  - libassuan
-  - libgcrypt
-  - libksba

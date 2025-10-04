@@ -27,6 +27,7 @@
     void_enable_display_manager: true
     
     # WiFi configuration - SET THESE BEFORE RUNNING
+    # Note: wpa_supplicant is already installed in the base image
     void_wpa_supplicant_config:
       country: "US"
       networks:
@@ -35,19 +36,44 @@
           key_mgmt: "WPA-PSK"
           priority: 1
     
-    # Network services
-    void_network_services: ["NetworkManager", "wpa_supplicant"]
+    # Network services (wpa_supplicant is pre-installed)
+    # Strategy: wpa_supplicant + dhcpcd for initial connectivity, then install NetworkManager
+    void_network_services: ["NetworkManager", "wpa_supplicant", "dhcpcd"]
+    
+    # Install NetworkManager after WiFi is configured
+    void_install_additional_network_packages: true
+    void_enable_networkmanager: true
+    void_network_users: ["pi"]
     
     # User configuration
     void_regular_users:
       - name: "pi"
-        groups: ["wheel", "audio", "video", "input", "plugdev"]
+        groups: ["wheel", "audio", "video", "input", "plugdev", "network"]
         shell: "/bin/bash"
         create_home: true
     
     void_sudo_users:
       - name: "pi"
         sudo_type: "nopasswd"
+    
+    # Enable wheel group sudo access
+    void_enable_wheel_sudo_nopasswd: true
+    
+    # Desktop environment
+    void_install_xfce: true
+    void_install_xfce_apps: true
+    void_display_manager: "lightdm"
+    void_enable_display_manager: true
+    
+    # Multimedia
+    void_audio_backend: "pipewire"
+    void_audio_services: ["pipewire", "wireplumber", "pipewire-pulse"]
+    
+    # Development tools
+    void_install_dev_tools: true
+    
+    # SDR packages
+    void_install_sdr_packages: true
     
     # Essential packages
     void_essential_packages:
@@ -63,6 +89,14 @@
       - okular
       - spectacle
       - kfind
+      - kcalc
+      - krunner
+      - kdeconnect
+      - firefox
+      - chromium
+      - libreoffice
+      - gimp
+      - vlc
 
   tasks:
     # Install essential packages

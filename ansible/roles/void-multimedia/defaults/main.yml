@@ -23,6 +23,8 @@ void_audio_backend: "pipewire"
 void_common_audio_packages:
   - alsa-utils
   - alsa-plugins
+  - alsa-tools
+  - alsa-firmware
   - pipewire
   - wireplumber
   - pipewire-pulse
@@ -31,3 +33,9 @@ void_common_audio_packages:
   - libspa-bluetooth
   - libjack-pipewire
   - pulseaudio-utils
+  - pavucontrol
+  - pavucontrol-qt
+  - helvum
+  - qpwgraph
+  - ncpamixer
+  - wpctl

@@ -4,10 +4,19 @@
 # Install WiFi packages
 void_install_wifi_packages: true
 
+# Enable wpa_supplicant
+void_enable_wpa_supplicant: true
+
+# Enable iwd
+void_enable_iwd: false
+
+# WiFi interfaces configuration
+void_wifi_interfaces: []  # Example: [{name: wlan0, ssid: mywifi, psk: mypass}]
+
 # wpa_supplicant configuration
 void_wpa_supplicant_config: {}
 
-# IWD configuration
+# iwd configuration
 void_iwd_config: {}
 
 # WiFi services to enable

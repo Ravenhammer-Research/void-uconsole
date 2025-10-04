@@ -28,3 +28,6 @@ void_firmware_config: {}
 # Common firmware packages
 void_common_firmware_packages:
   - linux-firmware
+  - linux-firmware-amd
+  - linux-firmware-intel
+  - linux-firmware-network

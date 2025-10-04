@@ -21,3 +21,7 @@ void_timezone: "UTC"
 
 # Translation packages
 void_translation_packages: []
+
+# Locale packages
+void_locale_packages:
+  - glibc-locales

@@ -3,14 +3,7 @@
 
 - name: Install printing packages
   xbps:
-    name:
-      - cups
-      - cups-filters
-      - cups-pdf
-      - ghostscript
-      - gutenprint
-      - foomatic-db
-      - foomatic-db-engine
+    name: "{{ void_common_printing_packages | default(['cups', 'cups-filters', 'ghostscript', 'gutenprint', 'foomatic-db', 'foomatic-db-engine', 'hplip']) }}"
     state: present
   when: void_install_printing_packages | default(true)
 

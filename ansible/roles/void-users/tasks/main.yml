@@ -1,5 +1,6 @@
 ---
 # Users and Groups management (3.4)
+# Based on https://docs.voidlinux.org/config/users-and-groups.html
 
 - name: Create system groups
   group:
@@ -32,15 +33,38 @@
 - name: Create regular users
   user:
     name: "{{ item.name }}"
-    uid: "{{ item.uid | default(omit) }}"
-    group: "{{ item.group | default(item.name) }}"
-    groups: "{{ item.groups | default([]) }}"
+    groups: "{{ item.groups | join(',') }}"
     shell: "{{ item.shell | default('/bin/bash') }}"
-    home: "{{ item.home | default('/home/' + item.name) }}"
     create_home: "{{ item.create_home | default(true) }}"
     password: "{{ item.password | default(omit) }}"
-    state: present
+    append: yes
   loop: "{{ void_regular_users | default([]) }}"
+  when: void_regular_users is defined
+
+- name: Create users (legacy support)
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups | join(',') }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    create_home: "{{ item.create_home | default(true) }}"
+    password: "{{ item.password | default(omit) }}"
+    append: yes
+  loop: "{{ void_users | default([]) }}"
+  when: void_users is defined
+
+- name: Configure sudoers for wheel group
+  lineinfile:
+    path: /etc/sudoers
+    line: "%wheel ALL=(ALL) ALL"
+    validate: "visudo -cf %s"
+  when: void_enable_wheel_sudo | default(false)
+
+- name: Configure sudoers for wheel group (nopasswd)
+  lineinfile:
+    path: /etc/sudoers
+    line: "%wheel ALL=(ALL) NOPASSWD:ALL"
+    validate: "visudo -cf %s"
+  when: void_enable_wheel_sudo_nopasswd | default(false)
 
 - name: Configure sudo access
   template:
@@ -58,3 +82,10 @@
     state: "{{ item.state | default('present') }}"
   loop: "{{ void_ssh_keys | default([]) }}"
   when: void_ssh_keys is defined
+
+- name: Change user shell
+  user:
+    name: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+  loop: "{{ void_user_shells | default([]) }}"
+  when: void_user_shells is defined

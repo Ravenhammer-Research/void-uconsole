@@ -23,3 +23,4 @@ void_common_printing_packages:
   - foomatic-db
   - foomatic-db-engine
   - hplip
+  - system-config-printer

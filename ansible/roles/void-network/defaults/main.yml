@@ -4,20 +4,35 @@
 # Install network packages
 void_install_network_packages: true
 
+# Install additional network packages (requires internet connection)
+void_install_additional_network_packages: false
+
+# Enable NetworkManager (requires internet connection to install)
+void_enable_networkmanager: false
+
+# Enable wpa_supplicant
+void_enable_wpa_supplicant: true
+
+# Enable dhcpcd
+void_enable_dhcpcd: true
+
+# Enable iwd
+void_enable_iwd: false
+
 # NetworkManager configuration
 void_networkmanager_config: {}
 
 # wpa_supplicant configuration
 void_wpa_supplicant_config: {}
 
-# IWD configuration
+# iwd configuration
 void_iwd_config: {}
 
 # ConnMan configuration
 void_connman_config: {}
 
 # Network interfaces configuration
-void_network_interfaces: {}
+void_network_interfaces: []  # Example: [{name: eth0, type: ethernet, dhcp: true}]
 
 # DHCP client configuration
 void_dhcpcd_config: {}
@@ -28,8 +43,37 @@ void_hostname: "void"
 # Hosts file configuration
 void_hosts_config: {}
 
-# Network services to enable
-void_network_services: ["NetworkManager"]
+# Network services to enable (initial setup uses only pre-installed packages)
+void_network_services: ["wpa_supplicant", "dhcpcd"]
+
+# Network services to disable (conflicting services)
+# Note: For initial setup, dhcpcd should work with wpa_supplicant
+void_disabled_network_services: ["wicd"]
 
 # Network profiles
 void_network_profiles: []
+
+# Users to add to network group
+void_network_users: []
+
+# Common network packages
+# Note: wpa_supplicant is already installed in the base image
+# Initial setup uses only pre-installed packages
+void_common_network_packages:
+  - dhcpcd
+  - ifupdown
+  - iproute2
+  - iputils
+  - net-tools
+  - wireless-tools
+  - ethtool
+  - resolvconf
+  - openresolv
+
+# Additional network packages (installed after internet connectivity)
+void_additional_network_packages:
+  - NetworkManager
+  - iwd
+  - network-manager-applet
+  - nm-tray
+  - plasma-nm
