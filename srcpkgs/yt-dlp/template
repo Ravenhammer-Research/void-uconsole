@@ -1,0 +1,38 @@
+# Template file for 'yt-dlp'
+pkgname=yt-dlp
+version=2025.09.26
+revision=1
+build_style=python3-pep517
+make_check_args="-k not((download)or(test_socks))"
+hostmakedepends="hatchling"
+depends="python3-Brotli python3-certifi python3-mutagen python3-requests python3-websockets"
+checkdepends="python3-pytest-xdist $depends"
+short_desc="CLI program to download videos from YouTube and other sites"
+maintainer="classabbyamp <void@placeviolette.net>"
+license="Unlicense"
+homepage="https://github.com/yt-dlp/yt-dlp"
+changelog="https://raw.githubusercontent.com/yt-dlp/yt-dlp/master/Changelog.md"
+distfiles="https://github.com/yt-dlp/yt-dlp/releases/download/${version}/yt-dlp.tar.gz>yt-dlp-$version.tar.gz"
+checksum=1a2221451f0b4815b4bd6dfa665238f44b34cb1dac01c1cfda5dff36459e1164
+
+post_install() {
+	cat <<- "EOF" > youtube-dl
+	#!/bin/sh
+	exec yt-dlp --compat-options youtube-dl "$@"
+	EOF
+	vbin youtube-dl
+}
+
+youtube-dl_package() {
+	depends="${sourcepkg}>=${version}_${revision}"
+	short_desc+=" (transitional compatibility package)"
+	pkg_install() {
+		vmove usr/bin/youtube-dl
+	}
+}
+
+python3-youtube-dl_package() {
+	depends="${sourcepkg}>=${version}_${revision}"
+	short_desc+=" (transitional dummy package)"
+	metapackage=yes
+}

@@ -1,0 +1,18 @@
+# Template file for 'flannel'
+pkgname=flannel
+version=0.27.3
+revision=1
+build_style=go
+go_mod_mode=off
+go_import_path="github.com/flannel-io/flannel"
+depends="etcd"
+short_desc="Etcd backed network fabric for containers"
+maintainer="Andrea Brancaleoni <abc@pompel.me>"
+license="Apache-2.0"
+homepage="https://github.com/flannel-io/flannel"
+distfiles="https://github.com/flannel-io/flannel/archive/v${version}.tar.gz"
+checksum=6106963da47856278a5d542817ba405e3be5c604510c575b665d730c029a720f
+
+post_install() {
+	vsv flannel
+}
