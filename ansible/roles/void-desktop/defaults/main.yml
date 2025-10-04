@@ -26,30 +26,15 @@ void_gnome_packages:
   - gnome-control-center
 
 void_kde_packages:
-  - plasma-desktop
-  - plasma-workspace
-  - plasma-workspace-wallpapers
-  - plasma-systemmonitor
-  - plasma-pa
-  - plasma-nm
-  - plasma-firewall
-  - plasma-browser-integration
-  - kde-gtk-config
-  - kde-cli-tools
-  - kde-runtime
-  - kwin
-  - kscreen
+  - kde-plasma
+  - kde-baseapps
   - sddm
-  - sddm-kcm
   - dolphin
   - konsole
   - kate
   - krunner
-  - kactivitymanagerd
-  - kwin-wayland
-  - kwayland
-  - kwayland-integration
-  - plasma-wayland-session
+  - kdegraphics-thumbnailers
+  - ffmpegthumbs
 
 void_xfce_packages:
   - xfce4

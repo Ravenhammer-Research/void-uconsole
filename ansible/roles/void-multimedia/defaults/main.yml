@@ -23,7 +23,11 @@ void_audio_backend: "pipewire"
 void_common_audio_packages:
   - alsa-utils
   - alsa-plugins
-  - pulseaudio
   - pipewire
+  - wireplumber
   - pipewire-pulse
   - pipewire-alsa
+  - alsa-pipewire
+  - libspa-bluetooth
+  - libjack-pipewire
+  - pulseaudio-utils

@@ -5,13 +5,13 @@
 # 
 # IMPORTANT: Set WiFi credentials before running:
 # cd /opt/ansible
-# ansible-playbook examples/uconsole-setup.yml -e "wifi_ssid=YOUR_WIFI_NAME" -e "wifi_password=YOUR_WIFI_PASSWORD"
+# ansible-playbook playbooks/uconsole-setup.yml -e "wifi_ssid=YOUR_WIFI_NAME" -e "wifi_password=YOUR_WIFI_PASSWORD"
 #
 # Or create a vars file with your WiFi credentials:
 # echo "wifi_ssid: 'YOUR_WIFI_NAME'" > /mnt/sideload/wifi_vars.yml
 # echo "wifi_password: 'YOUR_WIFI_PASSWORD'" >> /mnt/sideload/wifi_vars.yml
 # cd /opt/ansible
-# ansible-playbook examples/uconsole-setup.yml -e @/mnt/sideload/wifi_vars.yml
+# ansible-playbook playbooks/uconsole-setup.yml -e @/mnt/sideload/wifi_vars.yml
 
 - name: Setup uConsole with Wayland, PipeWire, and Plasma 6
   hosts: localhost
@@ -40,13 +40,13 @@
     
     # User configuration
     void_regular_users:
-      - name: "void"
-        groups: ["wheel", "audio", "video", "input", "seat"]
+      - name: "pi"
+        groups: ["wheel", "audio", "video", "input", "plugdev"]
         shell: "/bin/bash"
         create_home: true
     
     void_sudo_users:
-      - name: "void"
+      - name: "pi"
         sudo_type: "nopasswd"
     
     # Essential packages
@@ -63,8 +63,6 @@
       - okular
       - spectacle
       - kfind
-      - kate-plugins
-      - kate-plugins-extra
 
   tasks:
     # Install essential packages

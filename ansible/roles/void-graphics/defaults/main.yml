@@ -14,10 +14,15 @@ void_install_wayland: true
 void_desktop_packages: []
 
 # Font packages
-void_font_packages: []
+void_font_packages:
+  - dejavu-fonts-ttf
+  - noto-fonts-ttf
+  - noto-fonts-cjk
+  - noto-fonts-emoji
 
 # Icon packages
-void_icon_packages: []
+void_icon_packages:
+  - adwaita-icon-theme
 
 # Xorg configuration
 void_xorg_config: {}
@@ -29,10 +34,12 @@ void_wayland_config: {}
 void_wayland_packages:
   - wayland
   - wayland-protocols
-  - wayland-utils
-  - xwayland
+  - xorg-server-xwayland
   - libxkbcommon
   - libinput
+  - qt5-wayland
+  - qt6-wayland
+  - kwayland
 
 # Fonts configuration
 void_fonts_config: {}
