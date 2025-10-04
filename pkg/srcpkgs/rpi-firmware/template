@@ -1,0 +1,64 @@
+# Template file for 'rpi-firmware'
+pkgname=rpi-firmware
+version=20250814
+revision=1
+_rpi_fw=95be71b8c0f63f03dc06dd0e4c2e5535e6fb4a93
+_rpi_brcm=c9d3ae6584ab79d19a4f94ccf701e888f9f87a53
+_rpi_bt=2bbfb8438e824f5f61dae3f6ebb367a6129a4d63
+create_wrksrc=yes
+archs="aarch64* armv6l* armv7l*"
+short_desc="Firmware files for the Raspberry Pi"
+maintainer="classabbyamp <void@placeviolette.net>"
+license="BSD-3-Clause, custom:Cypress"
+homepage="https://github.com/raspberrypi/firmware"
+distfiles="
+ https://github.com/raspberrypi/firmware/archive/${_rpi_fw}.tar.gz
+ https://github.com/RPi-Distro/firmware-nonfree/archive/${_rpi_brcm}.tar.gz
+ https://github.com/RPi-Distro/bluez-firmware/archive/${_rpi_bt}.tar.gz
+ https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/LICENCE.cypress>LICENCE.cypress"
+checksum="6c1b017867c3a51e606859f1cd50df61b94af311577583b6b2a113d11131ee93
+ 5f713b285d83929a1894915ef64c4962ffadeb2cd741d0a8d7631852c1fe5e1e
+ 4b89d8346d528a098a50e71f27de993774910aaf74f2277b1cb9043c35f1db2a
+ ae0db6cc4db33941148df0f67de53e76a77b1b5a46b3165edb7040aa2750015f"
+skip_extraction="LICENCE.cypress"
+conf_files="/boot/cmdline.txt /boot/config.txt"
+nostrip=yes
+replaces="rpi-firmware-network>=0"
+
+do_install() {
+	# bootloader
+	vlicense "firmware-${_rpi_fw}/boot/LICENCE.broadcom"
+	rm -rf "firmware-${_rpi_fw}/boot/"*.img \
+		"firmware-${_rpi_fw}/boot/overlays" \
+		"firmware-${_rpi_fw}/boot/"*.dtb \
+		"firmware-${_rpi_fw}/boot/COPYING.linux" \
+		"firmware-${_rpi_fw}/boot/LICENCE.broadcom"
+
+	vmkdir boot
+	vcopy "firmware-${_rpi_fw}/boot/*" boot
+
+	# Install configuration files.
+	vinstall "${FILESDIR}/cmdline.txt" 644 boot
+	vinstall "${FILESDIR}/config.txt" 644 boot
+
+	# firmware
+	# we can use either the -standard or -minimal 43455 file so use standard by default
+	ln -sfv cyfmac43455-sdio-standard.bin "firmware-nonfree-${_rpi_brcm}/debian/config/brcm80211/cypress/cyfmac43455-sdio.bin"
+	vlicense "${XBPS_SRCDISTDIR}/${pkgname}-${version}/LICENCE.cypress"
+
+	# add original Pi Foundation firmware files
+	# install deref's symlinks and copies a whole file, which makes rpi use duplicated variants specifically from downstream firmware
+	install -Dm644 \
+		"firmware-nonfree-${_rpi_brcm}/debian/config/brcm80211/brcm/"brcmfmac*raspberrypi* \
+		-t "${DESTDIR}/usr/lib/firmware/brcm"
+
+	# but 43436/43436s/43456 is not in linux-firmware, so copy it normally
+	vcopy "firmware-nonfree-${_rpi_brcm}/debian/config/brcm80211/brcm/brcmfmac43456"* usr/lib/firmware/brcm
+	vcopy "firmware-nonfree-${_rpi_brcm}/debian/config/brcm80211/brcm/brcmfmac43436"* usr/lib/firmware/brcm
+
+	vcopy "bluez-firmware-${_rpi_bt}/debian/firmware/broadcom/"*.hcd usr/lib/firmware/brcm
+
+	vmkdir usr/lib/firmware/synaptics
+	vcopy "bluez-firmware-${_rpi_bt}/debian/firmware/synaptics/"*.hcd usr/lib/firmware/synaptics
+	vlicense "bluez-firmware-${_rpi_bt}/debian/firmware/synaptics/LICENSE.synaptics"
+}
